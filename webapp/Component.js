@@ -22,6 +22,12 @@ sap.ui.define([
 
 			// set the device model
             this.setModel(models.createDeviceModel(), "device");
+
+            // set i18n model
+            var i18nModel = new sap.ui.model.resource.ResourceModel({
+                bundleName : "simple-app.i18n.i18n"
+            });
+            this.setModel(i18nModel, "i18n");
             
             // create the views based on the url/hash
 			this.getRouter().initialize();

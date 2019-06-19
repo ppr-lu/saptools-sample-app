@@ -22,10 +22,13 @@ sap.ui.define([
                 bigMainSize: "90%",
                 smallMainSize: "50%",
                 detailsVisible: false,
+                detailSize: "40%"
             }
             var oConfigModel = new JSONModel(oConfig);
             this.getView().setModel(oConfigModel, "listConfig");
             this.onRetrieveListaOrdenMezcla();
+            Util.init_i18n(this);
+            //this.getView().setModel(this.getOwnerComponent().getModel("i18n"), "i18n");
         },
 
         //hide detail tables and enlarge main table
@@ -50,13 +53,39 @@ sap.ui.define([
             cajaScroll.setHeight(height);
         },
 
+        //If we use this as a handler of the selectionChange event fired by the table instead
+        //of the press event fired by a column list item, oEvent.getSource() retrieves the table
+        //instead of the table row.
         onListItemPress: function(oEvent){
             console.log("PRESSED!");
-            var oSelectedObject = oEvent.getSource().getBindingContext("modjson").getObject();
+            var listItem, oSelectedObject;
+            //List item
+            if(oEvent.getId() === "press"){
+                listItem = oEvent.getSource();
+                oSelectedObject = oEvent.getSource().getBindingContext("modjson").getObject();
+            }
+            //Table
+            else if(oEvent.getId() === "selectionChange"){
+                listItem = oEvent.getSource().getSelectedItem();
+                oSelectedObject = listItem.getBindingContext("modjson").getObject();
+            }
             console.log(oSelectedObject);
+                
             this.bindToDetailMaterial(oSelectedObject.MATERIALES_ORDEN);
             this.bindToDetailProcessOrder(oSelectedObject.ORDENES_PROCESO);
             this._renderDetailInView();
+            //does not work because _renderDetailInView causes a rerender of the tables
+            //and the custom class added to it is lost
+            //this._colorTableRow(listItem);
+            //To set the color, a different mode has been given to the Table in the view instead
+        },
+
+        _colorTableRow: function(oTableRow){
+            var oTable = oTableRow.getParent();
+            for(var i=0; i<oTable.getItems().length; i++){
+                oTable.getItems()[i].$().removeClass("markrow");
+            }
+            oTableRow.$().addClass("markrow");
         },
 
         //Fetch material info from retrieved data and assign it to a local model
@@ -87,7 +116,19 @@ sap.ui.define([
             }
         },
 
-        onRetrieveListaOrdenMezcla: function(oEvent){
+        onRetrieveListaOrdenMezcla: function(){
+            var that = this;
+            var params = Util.getListaOrdenMezParams();
+            var settings = {
+                url: "http://desarrollos.lyrsa.es/XMII/SOAPRunner/MEFRAGSA/Fundicion/Produccion/Ord_Mezcla/TX_lista_orden_mez",
+                httpMethod: "POST",
+                reqParams: params,
+                successCallback: that.bindRetrievedData
+            }
+            Util.sendSOAPRequest(settings, that);  
+        },
+
+        PREVIOUSonRetrieveListaOrdenMezcla: function(oEvent){
             var that = this;
             var url = "http://desarrollos.lyrsa.es/XMII/SOAPRunner/MEFRAGSA/Fundicion/Produccion/Ord_Mezcla/TX_lista_orden_mez";
 
@@ -116,8 +157,8 @@ sap.ui.define([
             });
         },
 
-        bindRetrievedData: function (data, textStatus, jqXHR){
-            var oView = this.getView();
+        bindRetrievedData: function (data, textStatus, jqXHR, controllerInstance){
+            var oView = controllerInstance.getView();
             var oXMLModel = new XMLModel();
             var oJSONModel;
             var oXML = Util.unescapeXML(data)

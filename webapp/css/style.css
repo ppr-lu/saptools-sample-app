@@ -1,1 +1,8 @@
 /* Enter your custom styles here */
+.markrow{
+    background-color:#8cc6ff !important;
+ }
+
+ .markrow span:not(.sapUiIcon) {
+    color: #ffffff !important;
+ }

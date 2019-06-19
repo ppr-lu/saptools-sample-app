@@ -14,15 +14,23 @@ height="100%" width="100%">
                         <Button text="SOAP" press="onRetrieveListaOrdenMezcla"/>
                         <Button text="Debug" press="onDebugButton"/>
                     </VBox>-->
-                    <ScrollContainer id="cajaScroll" height="{listConfig>/currentMainSize}" width="100%" horizontal="true" vertical="true" focusable="true">
-                        <Table id="generalTable" items="{ path: 'modjson>/soap:Envelope/soap:Body/XacuteResponse/Rowset/Row/O_XML_DOCUMENT/OT_ORDENES_MEZCLA/item/' }">
-                            <headerToolbar>
+                    <Title text="Ordenes Mezcla" level="H2"/>
+                    <ScrollContainer id="cajaScroll" height="{listConfig>/currentMainSize}" 
+                        width="100%" horizontal="true" vertical="true" focusable="true">
+                        <Table 
+                            id="generalTable" 
+                            items="{ path: 'modjson>/soap:Envelope/soap:Body/XacuteResponse/Rowset/Row/O_XML_DOCUMENT/OT_ORDENES_MEZCLA/item/' }"
+                            mode="SingleSelectMaster"
+                            
+                            selectionChange="onListItemPress"
+                            >
+                            <!--<headerToolbar>
                                 <OverflowToolbar>
                                     <content>
                                         <Title text="Ordenes Mezcla" level="H2"/>
                                     </content>
                                 </OverflowToolbar>
-                            </headerToolbar>
+                            </headerToolbar>-->
                             <columns>
                                 <Column>
                                     <Text text="Ord. Mezcla"/>
@@ -53,7 +61,8 @@ height="100%" width="100%">
                                 </Column>
                             </columns>
                             <items>
-                                <ColumnListItem type="Active" press="onListItemPress">
+                                <!--<ColumnListItem type="Active" press="onListItemPress" >-->
+                                <ColumnListItem type="Active">
                                     <cells>
                                         <Text
                                             text="{
@@ -88,7 +97,10 @@ height="100%" width="100%">
                             </items>
                         </Table>
                     </ScrollContainer>
-                    <VBox id="detailsBox" visible="{listConfig>/detailsVisible}">
+                    <Bar />
+                    <ScrollContainer id="detailsBox" visible="{listConfig>/detailsVisible}"
+                        height="{listConfig>/detailSize}" width="100%" horizontal="true" vertical="true" focusable="true">
+                        <VBox>
                         <Table id="materialesDetailTable" items="{path: 'modmateriales>/item/' }">
                             <headerToolbar>
                                 <OverflowToolbar>
@@ -163,9 +175,9 @@ height="100%" width="100%">
                             <headerToolbar>
                                 <OverflowToolbar>
                                     <content>
-                                        <Title text="Materiales" level="H2"/>
+                                        <Title text="Orden Proceso" level="H2"/>
                                         <ToolbarSpacer/>
-                                        <Button text="Close" press="onDetailListClose"/>
+                                        <!--<Button text="Close" press="onDetailListClose"/>-->
                                     </content>
                                 </OverflowToolbar>
                             </headerToolbar>
@@ -242,7 +254,8 @@ height="100%" width="100%">
                                 </ColumnListItem>
                             </items>
                         </Table>
-                    </VBox>
+                        </VBox>
+                    </ScrollContainer>
 				</content>
 			</Page>
 		</pages>
