@@ -39,7 +39,7 @@
 
 	"sap.ui5": {
 		"rootView": {
-			"viewName": "simple-app.view.View1",
+			"viewName": "simple-app.view.ListaMezclas",
 			"type": "XML"
 		},
 		"dependencies": {
@@ -70,6 +70,40 @@
 			"css": [{
 				"uri": "css/style.css"
 			}]
-		}
+        },
+        "routing": {
+            "config": {
+              "routerClass": "sap.m.routing.Router",
+              "viewType": "XML",
+              "controlAggregation": "app",
+              "controlId": "shellApp",
+              "viewPath": "simple-app.view",
+              "async": true
+            },
+            "routes": [
+              {
+                "pattern": "",
+                "name": "mixList",
+                "target": "mixList"
+              },
+              {
+                "pattern": "detail/{mixId}",
+                "name": "mixDetail",
+                "target": "mixDetail"
+              }
+            ],
+            "targets": {
+              "mixList": {
+                "viewId": "listaMezclas",
+                "viewName": "ListaMezclas",
+                "transition": "flip"
+              },
+              "mixDetail": {
+                "viewId": "detalleMezcla",
+                "viewName": "DetalleMezcla",
+                "transition": "flip"
+              }
+            }
+        }
 	}
 }

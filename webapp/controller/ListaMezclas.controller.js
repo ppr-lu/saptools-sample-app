@@ -7,12 +7,41 @@ sap.ui.define([
 ], function(Controller, XMLModel, JSONModel, Util, Formatter) {
 	"use strict";
 
-	return Controller.extend("simple-app.controller.View1", {
+	return Controller.extend("simple-app.controller.ListaMezclas", {
 
         formatter: Formatter,
         
         onInit: function(){
             console.log("on init!!!!");
+            //initial config
+            var oConfig = {
+                // currentMainSize: "35em",
+                // bigMainSize: "35em",
+                // smallMainSize: "25em",
+                currentMainSize: "90%",
+                bigMainSize: "90%",
+                smallMainSize: "50%",
+                detailsVisible: false,
+            }
+            var oConfigModel = new JSONModel(oConfig);
+            this.getView().setModel(oConfigModel, "listConfig");
+            this.onRetrieveListaOrdenMezcla();
+        },
+
+        //hide detail tables and enlarge main table
+        _renderNoDetailInView: function(){
+            var oConfigModel = this.getView().getModel("listConfig");
+            var mainSize = oConfigModel.getProperty("/bigMainSize");
+            oConfigModel.setProperty("/currentMainSize", mainSize);
+            oConfigModel.setProperty("/detailsVisible", false);
+        },
+
+        //make detail tables visible and shrink main table
+        _renderDetailInView: function(){
+            var oConfigModel = this.getView().getModel("listConfig");
+            var mainSize = oConfigModel.getProperty("/smallMainSize");
+            oConfigModel.setProperty("/currentMainSize", mainSize);
+            oConfigModel.setProperty("/detailsVisible", true);
         },
 
         onDebugButton: function(){
@@ -26,8 +55,11 @@ sap.ui.define([
             var oSelectedObject = oEvent.getSource().getBindingContext("modjson").getObject();
             console.log(oSelectedObject);
             this.bindToDetailMaterial(oSelectedObject.MATERIALES_ORDEN);
+            this.bindToDetailProcessOrder(oSelectedObject.ORDENES_PROCESO);
+            this._renderDetailInView();
         },
 
+        //Fetch material info from retrieved data and assign it to a local model
         bindToDetailMaterial: function(oMaterialData){
             if(oMaterialData){
                 //If it is a single object instead of an array of them...
@@ -38,6 +70,20 @@ sap.ui.define([
                 }
                 var oMaterialModel = new JSONModel(oMaterialData);
                 this.getView().setModel(oMaterialModel, "modmateriales");
+            }
+        },
+
+        //Fetch process orders info from retrieved data and assign it to a local model
+        bindToDetailProcessOrder: function(oOrderData){
+            if(oOrderData){
+                //If it is a single object instead of an array of them...
+                if(typeof oOrderData.item === 'object' && oOrderData.item !== null){
+                    if(!Array.isArray(oOrderData.item)){
+                        oOrderData.item = [oOrderData.item];
+                    }
+                }
+                var oProcessOrderModel = new JSONModel(oOrderData);
+                this.getView().setModel(oProcessOrderModel, "modordenesproceso");
             }
         },
 
@@ -83,6 +129,19 @@ sap.ui.define([
             oView.setModel(oJSONModel, "modjson");
         },
 
+        onDetailListClose: function(oEvent){
+            this._renderNoDetailInView();
+        },
+
+        onNavToDetail: function(oEvent){
+            console.log("NAV!");
+            var oSelectedObject = oEvent.getSource().getBindingContext("modjson").getObject();
+            console.log(oSelectedObject);
+            var mixId = String(parseInt(oSelectedObject.ORDENCARGA['#text'], 10));
+
+            var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
+			oRouter.navTo("mixDetail", {mixId: mixId});
+        }
         
 	});
 });

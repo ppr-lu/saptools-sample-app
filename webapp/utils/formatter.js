@@ -19,12 +19,21 @@ sap.ui.define([], function () {
             }
         },
         global2SpainDate: function(value){
-            var dateParts = value.split("-");
-            if(dateParts.length === 3){
-                return dateParts[2]+"-"+dateParts[1]+"-"+dateParts[0];
-            }else{
-                return value;
+            if(value && value.split){
+                var dateParts = value.split("-");
+                if(dateParts.length === 3){
+                    return dateParts[2]+"-"+dateParts[1]+"-"+dateParts[0];
+                }
             }
+            return value;
+            
+        },
+        checkIcon: function(value){
+            var icon = "sap-icon://decline";
+            if(value === 'X'){
+                icon = "sap-icon://accept";
+            }
+            return icon;
         }
 	};
 });
