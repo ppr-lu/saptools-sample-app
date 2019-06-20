@@ -60,7 +60,8 @@ sap.ui.define([
             }
             //Table
             else if(oEvent.getId() === "selectionChange"){
-                listItem = oEvent.getSource().getSelectedItem();
+                //listItem = oEvent.getSource().getSelectedItem();
+                listItem = oEvent.getParameter("listItem");
                 oSelectedObject = listItem.getBindingContext("modjson").getObject();
             }
             console.log(oSelectedObject);
@@ -180,6 +181,101 @@ sap.ui.define([
             var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
 			oRouter.navTo("mixDetail", {mixId: mixId});
         },
+
+		onFilterGeneralMixTable : function (oEvent) {
+            var sQuery = oEvent.getParameter("query");
+            // build filter array
+            var aFilter = [
+                new sap.ui.model.Filter("ORDENCARGA/#text", sap.ui.model.FilterOperator.Contains, sQuery),
+                new sap.ui.model.Filter("PESO_IDEAL/#text", sap.ui.model.FilterOperator.Contains, sQuery),
+                new sap.ui.model.Filter("PESO_CARGADO/#text", sap.ui.model.FilterOperator.Contains, sQuery),
+                new sap.ui.model.Filter("UNIDAD/#text", sap.ui.model.FilterOperator.Contains, sQuery),
+                new sap.ui.model.Filter("FECHA/#text", sap.ui.model.FilterOperator.Contains, sQuery),
+                new sap.ui.model.Filter("ACTIVA/#text", sap.ui.model.FilterOperator.Contains, sQuery),
+                new sap.ui.model.Filter("ZRECURSO/#text", sap.ui.model.FilterOperator.Contains, sQuery),
+                new sap.ui.model.Filter("SILO/#text", sap.ui.model.FilterOperator.Contains, sQuery),
+                new sap.ui.model.Filter("ORDENES_PROCESO/item/0/DESC_MATERIAL/#text", sap.ui.model.FilterOperator.Contains, sQuery)
+            ];
+
+            //ORDENES_PROCESO
+            var oModel = this.getView().getModel("modjson");
+            var oData = oModel.getProperty("/soap:Envelope/soap:Body/XacuteResponse/Rowset/Row/O_XML_DOCUMENT/OT_ORDENES_MEZCLA/item/");
+            if(oData != null && !Array.isArray(oData)){
+                oData = [oData];
+            }
+
+            var maxLenOrdenesProceso = 0;
+            for(var i=0;i<oData.length;i++){
+                if(oData[i].ORDENES_PROCESO.item && oData[i].ORDENES_PROCESO.item.length){
+                    if(oData[i].ORDENES_PROCESO.item.length > maxLenOrdenesProceso){
+                        maxLenOrdenesProceso = oData[i].ORDENES_PROCESO.item.length;
+                    }
+                }
+            }
+
+            for(var j=0;j<maxLenOrdenesProceso;j++){
+                aFilter.push(new sap.ui.model.Filter("ORDENES_PROCESO/item/"+i+"/CANTIDAD/#text", sap.ui.model.FilterOperator.Contains, sQuery));
+                aFilter.push(new sap.ui.model.Filter("ORDENES_PROCESO/item/"+i+"/CANT_ENTREGADA/#text", sap.ui.model.FilterOperator.Contains, sQuery));
+                aFilter.push(new sap.ui.model.Filter("ORDENES_PROCESO/item/"+i+"/DESC_MATERIAL/#text", sap.ui.model.FilterOperator.Contains, sQuery));
+                aFilter.push(new sap.ui.model.Filter("ORDENES_PROCESO/item/"+i+"/ESTADO/#text", sap.ui.model.FilterOperator.Contains, sQuery));
+                aFilter.push(new sap.ui.model.Filter("ORDENES_PROCESO/item/"+i+"/FECHA_PROG_FIN/#text", sap.ui.model.FilterOperator.Contains, sQuery));
+                aFilter.push(new sap.ui.model.Filter("ORDENES_PROCESO/item/"+i+"/FECHA_PROG_INI/#text", sap.ui.model.FilterOperator.Contains, sQuery));
+                aFilter.push(new sap.ui.model.Filter("ORDENES_PROCESO/item/"+i+"/FECHA_REAL_FIN/#text", sap.ui.model.FilterOperator.Contains, sQuery));
+                aFilter.push(new sap.ui.model.Filter("ORDENES_PROCESO/item/"+i+"/FECHA_REAL_INI/#text", sap.ui.model.FilterOperator.Contains, sQuery));
+                aFilter.push(new sap.ui.model.Filter("ORDENES_PROCESO/item/"+i+"/HORA_PROG_FIN/#text", sap.ui.model.FilterOperator.Contains, sQuery));
+                aFilter.push(new sap.ui.model.Filter("ORDENES_PROCESO/item/"+i+"/HORA_PROG_INI/#text", sap.ui.model.FilterOperator.Contains, sQuery));
+                aFilter.push(new sap.ui.model.Filter("ORDENES_PROCESO/item/"+i+"/HORA_REAL_FIN/#text", sap.ui.model.FilterOperator.Contains, sQuery));
+                aFilter.push(new sap.ui.model.Filter("ORDENES_PROCESO/item/"+i+"/HORA_REAL_INI/#text", sap.ui.model.FilterOperator.Contains, sQuery));
+                aFilter.push(new sap.ui.model.Filter("ORDENES_PROCESO/item/"+i+"/MATERIAL/#text", sap.ui.model.FilterOperator.Contains, sQuery));
+                aFilter.push(new sap.ui.model.Filter("ORDENES_PROCESO/item/"+i+"/NUM_ORDEN_PROCESO/#text", sap.ui.model.FilterOperator.Contains, sQuery));
+                aFilter.push(new sap.ui.model.Filter("ORDENES_PROCESO/item/"+i+"/PRIORIDAD/#text", sap.ui.model.FilterOperator.Contains, sQuery));
+                aFilter.push(new sap.ui.model.Filter("ORDENES_PROCESO/item/"+i+"/UNIDAD/#text", sap.ui.model.FilterOperator.Contains, sQuery));
+            }
+
+            //MATERIALES_ORDEN
+            var maxLenMaterialesOrden = 0;
+            for(var i=0;i<oData.length;i++){
+                if(oData[i].MATERIALES_ORDEN.item && oData[i].MATERIALES_ORDEN.item.length){
+                    if(oData[i].MATERIALES_ORDEN.item.length > maxLenMaterialesOrden){
+                        maxLenMaterialesOrden = oData[i].MATERIALES_ORDEN.item.length;
+                    }
+                }
+            }
+
+            for(var j=0;j<maxLenMaterialesOrden;j++){
+                aFilter.push(new sap.ui.model.Filter("MATERIALES_ORDEN/item/"+j+"/DESC_MATERIAL/#text", sap.ui.model.FilterOperator.Contains, sQuery));
+                aFilter.push(new sap.ui.model.Filter("MATERIALES_ORDEN/item/"+j+"/DESC_MATERIAL/#text", sap.ui.model.FilterOperator.Contains, sQuery));
+                aFilter.push(new sap.ui.model.Filter("MATERIALES_ORDEN/item/"+j+"/LOTE/#text", sap.ui.model.FilterOperator.Contains, sQuery));
+                aFilter.push(new sap.ui.model.Filter("MATERIALES_ORDEN/item/"+j+"/MATERIAL/#text", sap.ui.model.FilterOperator.Contains, sQuery));
+                aFilter.push(new sap.ui.model.Filter("MATERIALES_ORDEN/item/"+j+"/PESO_CARGADO/#text", sap.ui.model.FilterOperator.Contains, sQuery));
+                aFilter.push(new sap.ui.model.Filter("MATERIALES_ORDEN/item/"+j+"/PESO_IDEAL/#text", sap.ui.model.FilterOperator.Contains, sQuery));
+                aFilter.push(new sap.ui.model.Filter("MATERIALES_ORDEN/item/"+j+"/PORCENTAJE/#text", sap.ui.model.FilterOperator.Contains, sQuery));
+                aFilter.push(new sap.ui.model.Filter("MATERIALES_ORDEN/item/"+j+"/PORCENTAJE_IDEAL/#text", sap.ui.model.FilterOperator.Contains, sQuery));
+                aFilter.push(new sap.ui.model.Filter("MATERIALES_ORDEN/item/"+j+"/STOCK_LIBRE/#text", sap.ui.model.FilterOperator.Contains, sQuery));
+                aFilter.push(new sap.ui.model.Filter("MATERIALES_ORDEN/item/"+j+"/UM_STOCK_LIBRE/#text", sap.ui.model.FilterOperator.Contains, sQuery));
+                aFilter.push(new sap.ui.model.Filter("MATERIALES_ORDEN/item/"+j+"/UNIDAD/#text", sap.ui.model.FilterOperator.Contains, sQuery));
+            }
+
+			var theFilter = [];
+			
+			if (sQuery) {
+                theFilter.push(new sap.ui.model.Filter({
+                    filters: aFilter,
+                    and: false
+                }));
+			}
+
+			// filter binding
+			var oTable = this.byId("generalTable");
+			var oBinding = oTable.getBinding("items");
+            oBinding.filter(theFilter);
+            
+            //Emulate click of first item
+            /* var firstElem = oEvent.getSource().getParent().getParent().getItems()[0];
+            if(firstElem){
+                oTable.fireSelectionChange({listItem: firstElem});
+            } */
+		},
 
         /**
          * Busy Indicators

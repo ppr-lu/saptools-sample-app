@@ -30,6 +30,7 @@ height="100%" width="100%">
                                     <content>
                                         <Title text="Ordenes Mezcla" level="H2"/>
                                         <ToolbarSpacer/>
+                                        <SearchField width="50%" search="onFilterGeneralMixTable"/>
                                         <Button text="Refresh" icon="sap-icon://refresh" press="onRetrieveListaOrdenMezcla"/>
                                     </content>
                                 </OverflowToolbar>
