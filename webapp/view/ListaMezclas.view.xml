@@ -14,7 +14,7 @@ height="100%" width="100%">
                         <Button text="SOAP" press="onRetrieveListaOrdenMezcla"/>
                         <Button text="Debug" press="onDebugButton"/>
                     </VBox>-->
-                    
+                    <Button text="Debug" press="onDebugBtn"/>
                     <!-- <Title text="Ordenes Mezcla" level="H2"/> -->
                     <ScrollContainer id="cajaScroll" height="{listConfig>/currentMainSize}" 
                         width="100%" horizontal="true" vertical="true" focusable="true">

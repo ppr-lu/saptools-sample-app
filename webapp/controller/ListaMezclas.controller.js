@@ -182,6 +182,25 @@ sap.ui.define([
 			oRouter.navTo("mixDetail", {mixId: mixId});
         },
 
+        /**
+         * Busy Indicators
+         */
+        _setGeneralTableBusy(controllerInstance){
+            if(!controllerInstance){
+                controllerInstance = this;
+            }
+            Util.setControlBusyness(controllerInstance, "generalTable", true);
+        },
+        _unsetGeneralTableBusy(controllerInstance){
+            if(!controllerInstance){
+                controllerInstance = this;
+            }
+            Util.setControlBusyness(controllerInstance, "generalTable", false);
+        },
+
+        /**
+         * Simple Filter (Search)
+         */
 		onFilterGeneralMixTable : function (oEvent) {
             var sQuery = oEvent.getParameter("query");
             // build filter array
@@ -275,23 +294,87 @@ sap.ui.define([
             if(firstElem){
                 oTable.fireSelectionChange({listItem: firstElem});
             } */
-		},
-
-        /**
-         * Busy Indicators
-         */
-        _setGeneralTableBusy(controllerInstance){
-            if(!controllerInstance){
-                controllerInstance = this;
-            }
-            Util.setControlBusyness(controllerInstance, "generalTable", true);
         },
-        _unsetGeneralTableBusy(controllerInstance){
-            if(!controllerInstance){
-                controllerInstance = this;
-            }
-            Util.setControlBusyness(controllerInstance, "generalTable", false);
-        }
         
+        /**
+         * Advanced Filtering
+         */
+        
+        _genAllMaterialModel(){
+            var oView = this.getView();
+            var oGenModel = oView.getModel("modjson");
+            var matData = {results: []};
+            var oGenData = oGenModel.getProperty("/soap:Envelope/soap:Body/XacuteResponse/Rowset/Row/O_XML_DOCUMENT/OT_ORDENES_MEZCLA/item/");
+            if(oGenData != null && !Array.isArray(oGenData)){
+                oGenData = [oGenData];
+            }
+
+            for(var i=0;i<oGenData.length;i++){
+                var currentMixOrder = oGenData[i];
+                if(currentMixOrder.MATERIALES_ORDEN.item){
+                    for(var j=0;j<currentMixOrder.MATERIALES_ORDEN.item.length;j++){
+                        var insertData = currentMixOrder.MATERIALES_ORDEN.item[j];
+                        insertData.ORDEN_PADRE = currentMixOrder.ORDENCARGA;
+                        matData.results.push(insertData);
+                    }
+                }
+            }
+
+            var matModel = new JSONModel(matData);
+            oView.setModel(matModel, "modtodosmateriales");
+        },
+
+        _genAllProcessModel(){
+            var oView = this.getView();
+            var oGenModel = oView.getModel("modjson");
+            var procData = {results: []};
+            var oGenData = oGenModel.getProperty("/soap:Envelope/soap:Body/XacuteResponse/Rowset/Row/O_XML_DOCUMENT/OT_ORDENES_MEZCLA/item/");
+            if(oGenData != null && !Array.isArray(oGenData)){
+                oGenData = [oGenData];
+            }
+
+            for(var i=0;i<oGenData.length;i++){
+                var currentMixOrder = oGenData[i];
+                if(currentMixOrder.ORDENES_PROCESO.item){
+                    for(var j=0;j<currentMixOrder.ORDENES_PROCESO.item.length;j++){
+                        var insertData = currentMixOrder.ORDENES_PROCESO.item[j];
+                        insertData.ORDEN_PADRE = currentMixOrder.ORDENCARGA;
+                        procData.results.push(insertData);
+                    }
+                }
+            }
+
+            var procModel = new JSONModel(procData);
+            oView.setModel(procModel, "modtodosprocesos");
+        },
+
+        retrieve_mc_materiales: function(){
+            var that = this;
+            var params = Util.getListaOrdenMezParams();
+            var settings = {
+                url: "http://desarrollos.lyrsa.es/XMII/SOAPRunner/MEFRAGSA/Fundicion/Global/MatchCodes/TX_mc_materiales",
+                httpMethod: "POST",
+                reqParams: params,
+                successCallback: that.bindRetrievedMaterials,   
+            }
+            Util.sendSOAPRequest(settings, that);
+        },
+
+        bindRetrievedMaterials: function(controllerInstance, data){
+            var oView = controllerInstance.getView();
+    
+            var oJSONModel;
+            var oXML = Util.unescapeXML(data)
+            var xmlJson = Util.xmlToJson(oXML);
+            oJSONModel = new JSONModel(xmlJson);
+
+            oView.setModel(oJSONModel, "modmcmateriaes");
+        },
+
+        onDebugBtn: function(){
+            this._genAllMaterialModel();
+            this._genAllProcessModel();
+            this.retrieve_mc_materiales();
+        }
 	});
 });
