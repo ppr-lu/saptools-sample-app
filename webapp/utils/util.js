@@ -73,6 +73,10 @@ sap.ui.define([
             return typeof thing === 'object' && thing !== null;
         },
 
+        setControlBusyness(controllerInstance, id, busy){
+            controllerInstance.byId(id).setBusy(busy);
+        },
+
         /**
          * SOAP
          */
@@ -135,9 +139,11 @@ sap.ui.define([
          *  > httpMethod:       · HTTP method to be used in the request
          *  > reqParams:        · Data to be sent in the request body. Should be XML and adquired with getListaOrdenMezParams or getListaOrdenMezParams
          *  > successCallback:  · Callback function to be called when the request is answered successfully. It receives three parameters: data, textStatus and jqXHR. 
-         *                          Also recieves a controller instance as fourth parameter. 
-         *                          Through it, the view associated to the controller can be obtained and the data can be stored inside a model.
          *  > errorCallback:    · Callback function to be called when the request is answered unsuccessfully. It receives a single parameter: oError.
+         * 
+         *      Every callback function also recieves a controller instance as extra parameter. 
+         *      It is placed as the first one since it is most likely to be the one to be used in most of the cases, so the rest can be ignored.
+         *      Through it, the view associated to the controller can be obtained and the data can be stored inside a model, or a busy indicator can be set
          * 
          * The controller instance may also be needed by the successCallback if the retrieved data wants to be stored in a view model
          */
@@ -158,25 +164,40 @@ sap.ui.define([
                 oSettings.reqParams = "";
             }
             if(oSettings.successCallback === undefined){
-                oSettings.successCallback = function(data, textStatus, jqXHR, controllerInstance){
+                oSettings.successCallback = function(controllerInstance, data, textStatus, jqXHR){
                     console.log("You have not specified a success callback function");
                     console.log("> Params");
+                    console.log(">> controllerInstance:");
+                    console.log(controllerInstance);
                     console.log(">> data:");
                     console.log(data);
                     console.log(">> textStatus:");
                     console.log(textStatus);
                     console.log(">> jqXHR:");
                     console.log(jqXHR);
-                    console.log(">> controllerInstance:");
-                    console.log(controllerInstance);
+                    
                 };
             }
             if(oSettings.errorCallback === undefined){
-                oSettings.errorCallback = function(oError){
+                oSettings.errorCallback = function(controllerInstance, oError){
                     console.log("You have not specified a error callback function");
                     console.log("> Params");
+                    console.log(">> controllerInstance:");
+                    console.log(controllerInstance);
                     console.log(">> oError:");
                     console.log(oError);
+                };
+            }
+            if(oSettings.completeCallback === undefined){
+                oSettings.completeCallback = function(controllerInstance, jqXHR, textStatus){
+                    console.log("You have not specified a complete callback function");
+                    console.log("> Params");
+                    console.log(">> controllerInstance:");
+                    console.log(controllerInstance);
+                    console.log(">> jqXHR:");
+                    console.log(jqXHR);
+                    console.log(">> textStatus:");
+                    console.log(textStatus);
                 };
             }
 
@@ -187,8 +208,10 @@ sap.ui.define([
                 dataType: "xml",
                 contentType: "text/xml; charset=\"utf-8\"",
                 data: oSettings.reqParams,
-                success: function(data, textStatus, jqXHR){oSettings.successCallback(data, textStatus, jqXHR, controllerInstance);},
-                error: function(oError){oSettings.errorCallback(oError);}
+                //PAY ATTENTION TO THE ORDER OF THE PARAMETERS
+                success: function(data, textStatus, jqXHR){oSettings.successCallback(controllerInstance, data, textStatus, jqXHR);},
+                error: function(oError){oSettings.errorCallback(controllerInstance, oError);},
+                complete: function(jqXHR, textStatus){oSettings.completeCallback(controllerInstance, jqXHR, textStatus);}
             });
         },
 

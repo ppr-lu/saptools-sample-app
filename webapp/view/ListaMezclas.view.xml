@@ -14,23 +14,26 @@ height="100%" width="100%">
                         <Button text="SOAP" press="onRetrieveListaOrdenMezcla"/>
                         <Button text="Debug" press="onDebugButton"/>
                     </VBox>-->
-                    <Title text="Ordenes Mezcla" level="H2"/>
+                    
+                    <!-- <Title text="Ordenes Mezcla" level="H2"/> -->
                     <ScrollContainer id="cajaScroll" height="{listConfig>/currentMainSize}" 
                         width="100%" horizontal="true" vertical="true" focusable="true">
                         <Table 
                             id="generalTable" 
                             items="{ path: 'modjson>/soap:Envelope/soap:Body/XacuteResponse/Rowset/Row/O_XML_DOCUMENT/OT_ORDENES_MEZCLA/item/' }"
                             mode="SingleSelectMaster"
-                            
+                            sticky="HeaderToolbar"
                             selectionChange="onListItemPress"
                             >
-                            <!--<headerToolbar>
+                            <headerToolbar>
                                 <OverflowToolbar>
                                     <content>
                                         <Title text="Ordenes Mezcla" level="H2"/>
+                                        <ToolbarSpacer/>
+                                        <Button text="Refresh" icon="sap-icon://refresh" press="onRetrieveListaOrdenMezcla"/>
                                     </content>
                                 </OverflowToolbar>
-                            </headerToolbar>-->
+                            </headerToolbar>
                             <columns>
                                 <Column>
                                     <Text text="Ord. Mezcla"/>

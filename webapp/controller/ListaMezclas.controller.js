@@ -47,12 +47,6 @@ sap.ui.define([
             oConfigModel.setProperty("/detailsVisible", true);
         },
 
-        onDebugButton: function(){
-            var cajaScroll = this.getView().byId("cajaScroll");
-            var height = "10em";
-            cajaScroll.setHeight(height);
-        },
-
         //If we use this as a handler of the selectionChange event fired by the table instead
         //of the press event fired by a column list item, oEvent.getSource() retrieves the table
         //instead of the table row.
@@ -123,8 +117,10 @@ sap.ui.define([
                 url: "http://desarrollos.lyrsa.es/XMII/SOAPRunner/MEFRAGSA/Fundicion/Produccion/Ord_Mezcla/TX_lista_orden_mez",
                 httpMethod: "POST",
                 reqParams: params,
-                successCallback: that.bindRetrievedData
+                successCallback: that.bindRetrievedData,
+                completeCallback: that._unsetGeneralTableBusy
             }
+            that._setGeneralTableBusy();
             Util.sendSOAPRequest(settings, that);  
         },
 
@@ -157,7 +153,8 @@ sap.ui.define([
             });
         },
 
-        bindRetrievedData: function (data, textStatus, jqXHR, controllerInstance){
+        /**Used as ajax success callback. Order of the parameters matter */
+        bindRetrievedData: function (controllerInstance, data, textStatus, jqXHR){
             var oView = controllerInstance.getView();
             var oXMLModel = new XMLModel();
             var oJSONModel;
@@ -182,6 +179,22 @@ sap.ui.define([
 
             var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
 			oRouter.navTo("mixDetail", {mixId: mixId});
+        },
+
+        /**
+         * Busy Indicators
+         */
+        _setGeneralTableBusy(controllerInstance){
+            if(!controllerInstance){
+                controllerInstance = this;
+            }
+            Util.setControlBusyness(controllerInstance, "generalTable", true);
+        },
+        _unsetGeneralTableBusy(controllerInstance){
+            if(!controllerInstance){
+                controllerInstance = this;
+            }
+            Util.setControlBusyness(controllerInstance, "generalTable", false);
         }
         
 	});
