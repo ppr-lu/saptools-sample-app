@@ -213,7 +213,7 @@ sap.ui.define([
                 }
             }
 
-            for(var j=0;j<maxLenOrdenesProceso;j++){
+            for(var i=0;i<maxLenOrdenesProceso;i++){
                 aFilter.push(new sap.ui.model.Filter("ORDENES_PROCESO/item/"+i+"/CANTIDAD/#text", sap.ui.model.FilterOperator.Contains, sQuery));
                 aFilter.push(new sap.ui.model.Filter("ORDENES_PROCESO/item/"+i+"/CANT_ENTREGADA/#text", sap.ui.model.FilterOperator.Contains, sQuery));
                 aFilter.push(new sap.ui.model.Filter("ORDENES_PROCESO/item/"+i+"/DESC_MATERIAL/#text", sap.ui.model.FilterOperator.Contains, sQuery));
@@ -242,18 +242,18 @@ sap.ui.define([
                 }
             }
 
-            for(var j=0;j<maxLenMaterialesOrden;j++){
-                aFilter.push(new sap.ui.model.Filter("MATERIALES_ORDEN/item/"+j+"/DESC_MATERIAL/#text", sap.ui.model.FilterOperator.Contains, sQuery));
-                aFilter.push(new sap.ui.model.Filter("MATERIALES_ORDEN/item/"+j+"/DESC_MATERIAL/#text", sap.ui.model.FilterOperator.Contains, sQuery));
-                aFilter.push(new sap.ui.model.Filter("MATERIALES_ORDEN/item/"+j+"/LOTE/#text", sap.ui.model.FilterOperator.Contains, sQuery));
-                aFilter.push(new sap.ui.model.Filter("MATERIALES_ORDEN/item/"+j+"/MATERIAL/#text", sap.ui.model.FilterOperator.Contains, sQuery));
-                aFilter.push(new sap.ui.model.Filter("MATERIALES_ORDEN/item/"+j+"/PESO_CARGADO/#text", sap.ui.model.FilterOperator.Contains, sQuery));
-                aFilter.push(new sap.ui.model.Filter("MATERIALES_ORDEN/item/"+j+"/PESO_IDEAL/#text", sap.ui.model.FilterOperator.Contains, sQuery));
-                aFilter.push(new sap.ui.model.Filter("MATERIALES_ORDEN/item/"+j+"/PORCENTAJE/#text", sap.ui.model.FilterOperator.Contains, sQuery));
-                aFilter.push(new sap.ui.model.Filter("MATERIALES_ORDEN/item/"+j+"/PORCENTAJE_IDEAL/#text", sap.ui.model.FilterOperator.Contains, sQuery));
-                aFilter.push(new sap.ui.model.Filter("MATERIALES_ORDEN/item/"+j+"/STOCK_LIBRE/#text", sap.ui.model.FilterOperator.Contains, sQuery));
-                aFilter.push(new sap.ui.model.Filter("MATERIALES_ORDEN/item/"+j+"/UM_STOCK_LIBRE/#text", sap.ui.model.FilterOperator.Contains, sQuery));
-                aFilter.push(new sap.ui.model.Filter("MATERIALES_ORDEN/item/"+j+"/UNIDAD/#text", sap.ui.model.FilterOperator.Contains, sQuery));
+            for(var i=0;i<maxLenMaterialesOrden;i++){
+                aFilter.push(new sap.ui.model.Filter("MATERIALES_ORDEN/item/"+i+"/DESC_MATERIAL/#text", sap.ui.model.FilterOperator.Contains, sQuery));
+                aFilter.push(new sap.ui.model.Filter("MATERIALES_ORDEN/item/"+i+"/DESC_MATERIAL/#text", sap.ui.model.FilterOperator.Contains, sQuery));
+                aFilter.push(new sap.ui.model.Filter("MATERIALES_ORDEN/item/"+i+"/LOTE/#text", sap.ui.model.FilterOperator.Contains, sQuery));
+                aFilter.push(new sap.ui.model.Filter("MATERIALES_ORDEN/item/"+i+"/MATERIAL/#text", sap.ui.model.FilterOperator.Contains, sQuery));
+                aFilter.push(new sap.ui.model.Filter("MATERIALES_ORDEN/item/"+i+"/PESO_CARGADO/#text", sap.ui.model.FilterOperator.Contains, sQuery));
+                aFilter.push(new sap.ui.model.Filter("MATERIALES_ORDEN/item/"+i+"/PESO_IDEAL/#text", sap.ui.model.FilterOperator.Contains, sQuery));
+                aFilter.push(new sap.ui.model.Filter("MATERIALES_ORDEN/item/"+i+"/PORCENTAJE/#text", sap.ui.model.FilterOperator.Contains, sQuery));
+                aFilter.push(new sap.ui.model.Filter("MATERIALES_ORDEN/item/"+i+"/PORCENTAJE_IDEAL/#text", sap.ui.model.FilterOperator.Contains, sQuery));
+                aFilter.push(new sap.ui.model.Filter("MATERIALES_ORDEN/item/"+i+"/STOCK_LIBRE/#text", sap.ui.model.FilterOperator.Contains, sQuery));
+                aFilter.push(new sap.ui.model.Filter("MATERIALES_ORDEN/item/"+i+"/UM_STOCK_LIBRE/#text", sap.ui.model.FilterOperator.Contains, sQuery));
+                aFilter.push(new sap.ui.model.Filter("MATERIALES_ORDEN/item/"+i+"/UNIDAD/#text", sap.ui.model.FilterOperator.Contains, sQuery));
             }
 
 			var theFilter = [];
