@@ -18,6 +18,13 @@ sap.ui.define([], function () {
                 return String(parseInt(value, 10));
             }
         },
+        trimDecimals: function(value){
+            if(isNaN(value)){
+                return value;
+            }else{
+                return String(parseFloat(value, 10));
+            }
+        },
         global2SpainDate: function(value){
             if(value && value.split){
                 var dateParts = value.split("-");

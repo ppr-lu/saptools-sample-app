@@ -6,3 +6,7 @@
  .markrow span:not(.sapUiIcon) {
     color: #ffffff !important;
  }
+
+ .fixedCellHeight .sapMListTblCell {
+    height: 5em ;
+ }

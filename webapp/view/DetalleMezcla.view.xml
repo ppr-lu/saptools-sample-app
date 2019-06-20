@@ -13,13 +13,13 @@ height="100%" width="100%">
                     <VBox>
 				        <Text text="Detail" id="__text4"/>
                     </VBox>
-                    <HBox>
+                    <HBox width="100%">
                         <ScrollContainer id="mixDetailContainerLeft"
-                           height="100%" width="100%" horizontal="true" focusable="true">
+                           height="100%" width="100%" vertical="true" horizontal="true" focusable="true">
                             <Table 
+                                class="fixedCellHeight"
                                 id="mixDetailLeft" 
                                 items="{path: 'moddetailjson>/soap:Envelope/soap:Body/XacuteResponse/Rowset/Row/O_XML_DOCUMENT/O_DETALLE_ORDEN_MEZCLA/MATERIALES_ORDEN/item/' }"
-                                fixedLayout="false"
                                 >
                                 <headerToolbar>
                                     <OverflowToolbar>
@@ -58,93 +58,202 @@ height="100%" width="100%">
                             </Table>
                         </ScrollContainer>
                         <ScrollContainer id="mixDetailContainerRight"
-                            horizontal="true">
-                            <Table 
-                                id="mixDetailRight" 
-                                items="{path: 'moddetailjson>/soap:Envelope/soap:Body/XacuteResponse/Rowset/Row/O_XML_DOCUMENT_2/OT_DETALLE_COMPOSICION/item/' }"
-                                fixedLayout="false">
-                                <headerToolbar>
-                                    <OverflowToolbar>
-                                        <content>
-                                            <Title text="Composición" level="H2"/>
-                                            <ToolbarSpacer/>
-                                            <!--<Button text="Close" press="onDetailListClose"/>-->
-                                        </content>
-                                    </OverflowToolbar>
-                                </headerToolbar>
-                                <columns>
-                                    <Column>
-                                        <Text text="Orden Proceso"/>
-                                    </Column>
-                                    <Column>
-                                        <Text text="Material"/>
-                                    </Column>
-                                    <Column>
-                                        <Text text="Descripción"/>
-                                    </Column>
-                                    <Column hAlign="Right">
-                                        <Text text="Cantidad"/>
-                                    </Column>
-                                    <Column>
-                                        <Text text="UM"/>
-                                    </Column>
-                                    <Column>
-                                        <Text text="Estado"/>
-                                    </Column>
-                                    <Column>
-                                        <Text text="Prioridad"/>
-                                    </Column>
-                                    <Column>
-                                        <Text text="Fecha inicio plan"/>
-                                    </Column>
-                                    <Column>
-                                        <Text text="Fecha fin plan"/>
-                                    </Column>
-                                    <Column>
-                                        <Text text="Fecha inicio real"/>
-                                    </Column>
-                                    <Column>
-                                        <Text text="Fecha fin real"/>
-                                    </Column>
-                                </columns>
-                                <items>
-                                    <ColumnListItem>
-                                        <cells>
-                                            <Text
-                                                text="{
-                                                path: 'modordenesproceso>NUM_ORDEN_PROCESO/#text',
-                                                formatter: '.formatter.noLeadingZeroes'
-                                                }"/>
-                                            <Text
-                                                text="{ path: 'modordenesproceso>MATERIAL/#text',
-                                                formatter: '.formatter.noLeadingZeroes'}" />
-                                            <Text
-                                                text="{modordenesproceso>DESC_MATERIAL/#text}" />
-                                            <Text
-                                                text="{ path: 'modordenesproceso>CANTIDAD/#text',
-                                                formatter: '.formatter.noDecimals' }"/>
-                                            <Text
-                                                text="{ path: 'modordenesproceso>UNIDAD/#text' }"/>
-                                            <Text
-                                                text="{ path: 'modordenesproceso>ESTADO/#text' }"/>
-                                            <Text
-                                                text="{ path: 'modordenesproceso>PRIORIDAD/#text' }"/>
-                                            <Text
-                                                text="{path: 'modordenesproceso>FECHA_PROG_INI/#text',
-                                                formatter: '.formatter.global2SpainDate'}"/>
-                                            <Text
-                                                text="{path: 'modordenesproceso>FECHA_PROG_FIN/#text',
-                                                formatter: '.formatter.global2SpainDate'}"/>
-                                            <Text
-                                                text="{path: 'modordenesproceso>FECHA_REAL_INI/#text',
-                                                formatter: '.formatter.global2SpainDate'}"/>
-                                            <Text
-                                                text="{path: 'modordenesproceso>FECHA_REAL_FIN/#text',
-                                                formatter: '.formatter.global2SpainDate'}"/>
-                                        </cells>
-                                    </ColumnListItem>
-                                </items>
-                            </Table>
+                            height="100%" width="60%" vertical="true" horizontal="true" focusable="true">
+                            <HBox>
+                                <Table 
+                                    class="fixedCellHeight" 
+                                    id="mixDetailRightPart1" 
+                                    items="{path: 'moddetailjson>/soap:Envelope/soap:Body/XacuteResponse/Rowset/Row/O_XML_DOCUMENT/O_DETALLE_ORDEN_MEZCLA/MATERIALES_ORDEN/item/' }"
+                                    >
+                                    <headerToolbar>
+                                        <OverflowToolbar>
+                                            <content>
+                                                <Title text="Composición" level="H2"/>
+                                                <ToolbarSpacer/>
+                                                <!--<Button text="Close" press="onDetailListClose"/>-->
+                                            </content>
+                                        </OverflowToolbar>
+                                    </headerToolbar>
+                                    <columns>
+                                        <Column width="100px">
+                                            <Text text="Activa"/>
+                                        </Column>
+                                        <Column hAlign="Right" width="100px">
+                                            <Text text="Peso ideal"/>
+                                        </Column>
+                                        <Column hAlign="Right" width="100px">
+                                            <Text text="Peso cargado"/>
+                                        </Column>
+                                        <Column width="100px">
+                                            <Text text="UM"/>
+                                        </Column>
+                                        <Column hAlign="Right" width="100px">
+                                            <Text text="% ideal"/>
+                                        </Column>
+                                        <Column hAlign="Right" width="100px">
+                                            <Text text="% cargado"/>
+                                        </Column>
+                                    </columns>
+                                    <items>
+                                        <ColumnListItem>
+                                            <cells>
+                                                <core:Icon 
+                                                    src="{ path: 'moddetailjson>ACTIVA/#text',
+                                                    formatter: '.formatter.checkIcon' }"/>
+                                                <Text
+                                                    text="{ path: 'moddetailjson>PESO_IDEAL/#text' }"/>
+                                                <Text
+                                                    text="{ path: 'moddetailjson>PESO_CARGADO/#text' }"/>
+                                                <Text
+                                                    text="{moddetailjson>DESC_MATERIAL/#text }" />
+                                                <Text
+                                                    text="{ path: 'moddetailjson>UNIDAD/#text' }"/>
+                                                <Text
+                                                    text="{ path: 'moddetailjson>PORCENTAJE_IDEAL/#text',
+                                                    formatter: '.formatter.noDecimals' }"/>
+                                                <Text
+                                                    text="{ path: 'moddetailjson>PORCENTAJE/#text',
+                                                    formatter: '.formatter.noDecimals' }"/>
+                                            </cells>
+                                        </ColumnListItem>
+                                    </items>
+                                </Table>
+                                <Table
+                                    class="fixedCellHeight"
+                                    id="mixDetailRightPart2" 
+                                    items="{path: 'moddetailjson>/soap:Envelope/soap:Body/XacuteResponse/Rowset/Row/O_XML_DOCUMENT_2/OT_DETALLE_COMPOSICION/item/' }"
+                                    >
+                                    <headerToolbar>
+                                        <OverflowToolbar>
+                                            <content>
+                                                <Title text="" level="H2"/>
+                                                <ToolbarSpacer/>
+                                                <!--<Button text="Close" press="onDetailListClose"/>-->
+                                            </content>
+                                        </OverflowToolbar>
+                                    </headerToolbar>
+                                    <columns>
+                                        <Column hAlign="Right" width="100px">
+                                            <Text text="Rendim. (%)"/>
+                                        </Column>
+                                        <Column hAlign="Right" width="100px">
+                                            <Text text="Al (%)"/>
+                                        </Column>
+                                        <Column hAlign="Right" width="100px">
+                                            <Text text="Si (%)"/>
+                                        </Column>
+                                        <Column hAlign="Right" width="100px">
+                                            <Text text="Fe (%)"/>
+                                        </Column>
+                                        <Column hAlign="Right" width="100px">
+                                            <Text text="Cu (%)"/>
+                                        </Column>
+                                        <Column hAlign="Right" width="100px">
+                                            <Text text="Mn (%)"/>
+                                        </Column>
+                                        <Column hAlign="Right" width="100px">
+                                            <Text text="Mg (%)"/>
+                                        </Column>
+                                        <Column hAlign="Right" width="100px">
+                                            <Text text="Cr (%)"/>
+                                        </Column>
+                                        <Column hAlign="Right" width="100px">
+                                            <Text text="Ni (%)"/>
+                                        </Column>
+                                        <Column hAlign="Right" width="100px">
+                                            <Text text="Zn (%)"/>
+                                        </Column>
+                                        <Column hAlign="Right" width="100px">
+                                            <Text text="Pb (%)"/>
+                                        </Column>
+                                        <Column hAlign="Right" width="100px">
+                                            <Text text="Sn (%)"/>
+                                        </Column>
+                                        <Column hAlign="Right" width="100px">
+                                            <Text text="Ti (%)"/>
+                                        </Column>
+                                        <Column hAlign="Right" width="100px">
+                                            <Text text="Sr (%)"/>
+                                        </Column>
+                                        <Column hAlign="Right" width="100px">
+                                            <Text text="Ca (%)"/>
+                                        </Column>
+                                        <Column hAlign="Right" width="100px">
+                                            <Text text="P (%)"/>
+                                        </Column>
+                                    </columns>
+                                    <items>
+                                        <ColumnListItem>
+                                            <cells>
+                                                <Text
+                                                    text="{ path: 'moddetailjson>RENDIMIENTO/#text',
+                                                    formatter: '.formatter.noDecimals' }"/>
+                                                <Text
+                                                    text="{
+                                                    path: 'moddetailjson>ALUMINIO/#text',
+                                                    formatter: '.formatter.trimDecimals' }"/>
+                                                <Text
+                                                    text="{
+                                                    path: 'moddetailjson>SILICIO/#text',
+                                                    formatter: '.formatter.trimDecimals' }"/>
+                                                <Text
+                                                    text="{
+                                                    path: 'moddetailjson>HIERRO/#text',
+                                                    formatter: '.formatter.trimDecimals'  }"/>
+                                                <Text
+                                                    text="{
+                                                    path: 'moddetailjson>COBRE/#text',
+                                                    formatter: '.formatter.trimDecimals' }"/>
+                                                <Text
+                                                    text="{
+                                                    path: 'moddetailjson>MANGANESO/#text',
+                                                    formatter: '.formatter.trimDecimals' }"/>
+                                                <Text
+                                                    text="{
+                                                    path: 'moddetailjson>MAGNESIO/#text',
+                                                    formatter: '.formatter.trimDecimals' }"/>
+                                                <Text
+                                                    text="{
+                                                    path: 'moddetailjson>CROMO/#text',
+                                                    formatter: '.formatter.trimDecimals' }"/>
+                                                <Text
+                                                    text="{
+                                                    path: 'moddetailjson>NIQUEL/#text',
+                                                    formatter: '.formatter.trimDecimals' }"/>
+                                                <Text
+                                                    text="{
+                                                    path: 'moddetailjson>ZINC/#text',
+                                                    formatter: '.formatter.trimDecimals' }"/>
+                                                <Text
+                                                    text="{
+                                                    path: 'moddetailjson>PLOMO/#text',
+                                                    formatter: '.formatter.trimDecimals' }"/>
+                                                <Text
+                                                    text="{
+                                                    path: 'moddetailjson>ESTANO/#text',
+                                                    formatter: '.formatter.trimDecimals'  }"/>
+                                                <Text
+                                                    text="{
+                                                    path: 'moddetailjson>TITANIO/#text',
+                                                    formatter: '.formatter.trimDecimals' }"/>
+                                                <Text
+                                                    text="{
+                                                    path: 'moddetailjson>ESTRONCIO/#text',
+                                                    formatter: '.formatter.trimDecimals'  }"/>
+                                                <Text
+                                                    text="{
+                                                    path: 'moddetailjson>CALCIO/#text',
+                                                    formatter: '.formatter.trimDecimals' }"/>
+                                                <Text
+                                                    text="{
+                                                    path: 'moddetailjson>FOSFORO/#text',
+                                                    formatter: '.formatter.trimDecimals' }"/>
+                                                
+                                            </cells>
+                                        </ColumnListItem>
+                                    </items>
+                                </Table> 
+                            </HBox>
                         </ScrollContainer>
                     </HBox>
 				</content>
