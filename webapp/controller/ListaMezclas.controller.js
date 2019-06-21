@@ -2,9 +2,10 @@ sap.ui.define([
     "sap/ui/core/mvc/Controller",
     "sap/ui/model/xml/XMLModel",
     "sap/ui/model/json/JSONModel",
+    "sap/ui/core/Fragment",
     "simple-app/utils/util",
     "simple-app/utils/formatter"
-], function(Controller, XMLModel, JSONModel, Util, Formatter) {
+], function(Controller, XMLModel, JSONModel, Fragment, Util, Formatter) {
 	"use strict";
 
 	return Controller.extend("simple-app.controller.ListaMezclas", {
@@ -86,12 +87,13 @@ sap.ui.define([
         //Fetch material info from retrieved data and assign it to a local model
         bindToDetailMaterial: function(oMaterialData){
             if(oMaterialData){
-                //If it is a single object instead of an array of them...
+                //Already done by fixGeneralData()
+                /* //If it is a single object instead of an array of them...
                 if(typeof oMaterialData.item === 'object' && oMaterialData.item !== null){
                     if(!Array.isArray(oMaterialData.item)){
                         oMaterialData.item = [oMaterialData.item];
                     }
-                }
+                } */
                 var oMaterialModel = new JSONModel(oMaterialData);
                 this.getView().setModel(oMaterialModel, "modmateriales");
             }
@@ -100,12 +102,13 @@ sap.ui.define([
         //Fetch process orders info from retrieved data and assign it to a local model
         bindToDetailProcessOrder: function(oOrderData){
             if(oOrderData){
-                //If it is a single object instead of an array of them...
+                //Already done by fixGeneralData()
+               /*  //If it is a single object instead of an array of them...
                 if(typeof oOrderData.item === 'object' && oOrderData.item !== null){
                     if(!Array.isArray(oOrderData.item)){
                         oOrderData.item = [oOrderData.item];
                     }
-                }
+                } */
                 var oProcessOrderModel = new JSONModel(oOrderData);
                 this.getView().setModel(oProcessOrderModel, "modordenesproceso");
             }
@@ -161,11 +164,30 @@ sap.ui.define([
             var oJSONModel;
             var oXML = Util.unescapeXML(data)
             var xmlJson = Util.xmlToJson(oXML);
+            controllerInstance._fixGeneralData(xmlJson);
             oXMLModel.setData(oXML);
             oJSONModel = new JSONModel(xmlJson);
 
             oView.setModel(oXMLModel,"modxml");
             oView.setModel(oJSONModel, "modjson");
+        },
+
+        _fixGeneralData: function(oData){
+
+            var data2fix = oData["soap:Envelope"]["soap:Body"].XacuteResponse.Rowset.Row.O_XML_DOCUMENT.OT_ORDENES_MEZCLA;
+            if(data2fix.item != null && !Array.isArray(data2fix.item)){
+                data2fix.item = [data2fix.item];
+            }
+
+            for(var i=0;i<data2fix.item.length;i++){
+                var currentOrder = data2fix.item[i];
+                if(currentOrder.MATERIALES_ORDEN.item != null && !Array.isArray(currentOrder.MATERIALES_ORDEN.item)){
+                    currentOrder.MATERIALES_ORDEN.item = [currentOrder.MATERIALES_ORDEN.item];
+                }
+                if(currentOrder.ORDENES_PROCESO.item != null && !Array.isArray(currentOrder.ORDENES_PROCESO.item)){
+                    currentOrder.ORDENES_PROCESO.item = [currentOrder.ORDENES_PROCESO.item];
+                }
+            }
         },
 
         onDetailListClose: function(oEvent){
@@ -201,7 +223,7 @@ sap.ui.define([
         /**
          * Simple Filter (Search)
          */
-		onFilterGeneralMixTable : function (oEvent) {
+		onSearchGeneralMixTable : function (oEvent) {
             var sQuery = oEvent.getParameter("query");
             // build filter array
             var aFilter = [
@@ -299,11 +321,42 @@ sap.ui.define([
         /**
          * Advanced Filtering
          */
+        onOpenFilterDialog : function () {
+			var oView = this.getView();
+
+			// create dialog lazily
+			if (!this.byId("AdvancedFilterDialog")) {
+				// load asynchronous XML fragment
+				Fragment.load({
+					id: oView.getId(),
+                    name: "simple-app.view.fragments.AdvancedFilterDialog",
+                    controller: this
+				}).then(function (oDialog) {
+					// connect dialog to the root view of this component (models, lifecycle)
+					oView.addDependent(oDialog);
+					oDialog.open();
+				});
+			} else {
+				this.byId("AdvancedFilterDialog").open();
+			}
+        },
         
-        _genAllMaterialModel(){
+        onCloseFilterDialog: function(){
+            this.byId("AdvancedFilterDialog").close();
+        },
+
+        _initAllMaterialModel(controllerInstance){
+            if(!controllerInstance){
+                controllerInstance=this;
+            }
+            var oView = controllerInstance.getView();
+            oView.setModel(new JSONModel({}), "modallmaterial");
+        },
+        
+        _addMaterials2AllMaterialModel(){
             var oView = this.getView();
             var oGenModel = oView.getModel("modjson");
-            var matData = {results: []};
+            var matData = oView.getModel("modallmaterial").getData();
             var oGenData = oGenModel.getProperty("/soap:Envelope/soap:Body/XacuteResponse/Rowset/Row/O_XML_DOCUMENT/OT_ORDENES_MEZCLA/item/");
             if(oGenData != null && !Array.isArray(oGenData)){
                 oGenData = [oGenData];
@@ -313,21 +366,21 @@ sap.ui.define([
                 var currentMixOrder = oGenData[i];
                 if(currentMixOrder.MATERIALES_ORDEN.item){
                     for(var j=0;j<currentMixOrder.MATERIALES_ORDEN.item.length;j++){
-                        var insertData = currentMixOrder.MATERIALES_ORDEN.item[j];
-                        insertData.ORDEN_PADRE = currentMixOrder.ORDENCARGA;
-                        matData.results.push(insertData);
+                        var currentMaterial = currentMixOrder.MATERIALES_ORDEN.item[j].MATERIAL["#text"];
+                        if(matData[currentMaterial]){
+                            matData[currentMaterial].push(currentMixOrder.ORDENCARGA["#text"]);
+                        }else{
+                            matData[currentMaterial] = [currentMixOrder.ORDENCARGA["#text"]]; //A list with all ORDER IDs that contain said material
+                        }
                     }
                 }
             }
-
-            var matModel = new JSONModel(matData);
-            oView.setModel(matModel, "modtodosmateriales");
         },
 
-        _genAllProcessModel(){
+        _addProcessesMaterials2AllMaterialModel(){
             var oView = this.getView();
             var oGenModel = oView.getModel("modjson");
-            var procData = {results: []};
+            var procData = oView.getModel("modallmaterial").getData();
             var oGenData = oGenModel.getProperty("/soap:Envelope/soap:Body/XacuteResponse/Rowset/Row/O_XML_DOCUMENT/OT_ORDENES_MEZCLA/item/");
             if(oGenData != null && !Array.isArray(oGenData)){
                 oGenData = [oGenData];
@@ -337,15 +390,15 @@ sap.ui.define([
                 var currentMixOrder = oGenData[i];
                 if(currentMixOrder.ORDENES_PROCESO.item){
                     for(var j=0;j<currentMixOrder.ORDENES_PROCESO.item.length;j++){
-                        var insertData = currentMixOrder.ORDENES_PROCESO.item[j];
-                        insertData.ORDEN_PADRE = currentMixOrder.ORDENCARGA;
-                        procData.results.push(insertData);
+                        var currentMaterial = currentMixOrder.ORDENES_PROCESO.item[j].MATERIAL["#text"];
+                        if(procData[currentMaterial]){
+                            procData[currentMaterial].push(currentMixOrder.ORDENCARGA["#text"]);
+                        }else{
+                            procData[currentMaterial] = [currentMixOrder.ORDENCARGA["#text"]];
+                        }
                     }
                 }
             }
-
-            var procModel = new JSONModel(procData);
-            oView.setModel(procModel, "modtodosprocesos");
         },
 
         retrieve_mc_materiales: function(){
@@ -355,12 +408,12 @@ sap.ui.define([
                 url: "http://desarrollos.lyrsa.es/XMII/SOAPRunner/MEFRAGSA/Fundicion/Global/MatchCodes/TX_mc_materiales",
                 httpMethod: "POST",
                 reqParams: params,
-                successCallback: that.bindRetrievedMaterials,   
+                successCallback: that.bindRetrievedMcMaterials,   
             }
             Util.sendSOAPRequest(settings, that);
         },
 
-        bindRetrievedMaterials: function(controllerInstance, data){
+        bindRetrievedMcMaterials: function(controllerInstance, data){
             var oView = controllerInstance.getView();
     
             var oJSONModel;
@@ -368,13 +421,36 @@ sap.ui.define([
             var xmlJson = Util.xmlToJson(oXML);
             oJSONModel = new JSONModel(xmlJson);
 
-            oView.setModel(oJSONModel, "modmcmateriaes");
+            oView.setModel(oJSONModel, "modmcmateriales");
+        },
+
+        _genAllResourcesModel: function(){
+
+            var resourceData = {results: []};
+            var oView = this.getView();
+            var oGenModel = oView.getModel("modjson");
+            var oGenData = oGenModel.getProperty("/soap:Envelope/soap:Body/XacuteResponse/Rowset/Row/O_XML_DOCUMENT/OT_ORDENES_MEZCLA/item/");
+            if(oGenData != null && !Array.isArray(oGenData)){
+                oGenData = [oGenData];
+            }
+
+            for(var i=0;i<oGenData.length;i++){
+                var currentMixOrder = oGenData[i];
+                var currentResource = currentMixOrder.ZRECURSO["#text"];
+                if(resourceData.results.indexOf(currentResource) < 0){
+                    resourceData.results.push(currentResource);
+                }
+            }
+
+            oView.setModel( new JSONModel(resourceData), "modallresources");
         },
 
         onDebugBtn: function(){
-            this._genAllMaterialModel();
-            this._genAllProcessModel();
             this.retrieve_mc_materiales();
+            this._initAllMaterialModel();
+            this._addMaterials2AllMaterialModel();
+            this._addProcessesMaterials2AllMaterialModel();
+            this._genAllResourcesModel();
         }
 	});
 });

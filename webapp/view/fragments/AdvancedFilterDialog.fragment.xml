@@ -1,0 +1,39 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:core="sap.ui.core">
+	<Dialog
+        id="AdvancedFilterDialog"
+		stretch="true"
+        stretchOnPhone="true"
+        title="Búsqueda Avanzada">
+        <beginButton>
+            <Button
+                text="Cerrar"
+                press="onCloseFilterDialog"/>
+        </beginButton>
+        <VBox>
+            <Label text="Material"/>
+            <!-- Use binding property instead of getSelectedItems() using id -->
+            <MultiComboBox
+                items="{
+                    path: 'modmcmateriales>/soap:Envelope/soap:Body/XacuteResponse/Rowset/Row/O_XML_DOCUMENT/OT_MATERIALES/item/',
+                    sorter: { path: 'modmcmateriales>DESCRIPCION/#text' }
+                }">
+                <core:Item key="{modmcmateriales>MATERIAL/#text}" text="{modmcmateriales>DESCRIPCION/#text}"/>
+            </MultiComboBox>
+            <Label text="Recurso"/>
+            <Label text="Fecha Desde"/>
+            <DatePicker
+                value="{modadvfilter>/fechadesde}"
+                valueFormat="yyyy-MM-dd"
+                displayFormat="dd/MM/yyyy"
+            />
+            <Label text="Fecha Hasta"/>
+            <DatePicker
+                value="{modadvfilter>/fechahasta}"
+                valueFormat="yyyy-MM-dd"
+                displayFormat="dd/MM/yyyy"
+            />
+        </VBox>
+	</Dialog>
+</core:FragmentDefinition>
