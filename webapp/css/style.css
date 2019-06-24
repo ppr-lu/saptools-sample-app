@@ -1,12 +1,32 @@
 /* Enter your custom styles here */
 .markrow{
     background-color:#8cc6ff !important;
- }
+}
 
- .markrow span:not(.sapUiIcon) {
+.markrow span:not(.sapUiIcon) {
     color: #ffffff !important;
- }
+}
 
- .fixedCellHeight .sapMListTblCell {
+.fixedCellHeight .sapMListTblCell {
     height: 5em ;
- }
+}
+
+.alignLeft {
+    text-align: left;
+}
+
+.customDetailCSS .sapMFooter-CTX{
+    display: none;
+}
+
+.customDetailCSS .sapUxAPObjectPageSection{
+    margin-top: 0em;
+}
+
+.customDetailCSS .sapUxAPObjectPageSectionHeader{
+    display: none;
+}
+
+.customDetailCSS .sapUxAPBlockContainer{
+    padding: 0rem 2rem 0rem 2rem;
+}

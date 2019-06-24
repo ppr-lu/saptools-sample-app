@@ -12,9 +12,8 @@ height="100%" width="100%">
 				        <Text text="Simple app" id="__text4"/>
                         <Label text="test: {modjson>/soap:Envelope/soap:Body/XacuteResponse/Rowset/Row/O_XML_DOCUMENT/OT_ORDENES_MEZCLA/item/0/ORDENCARGA/#text}"/>
                         <Button text="SOAP" press="onRetrieveListaOrdenMezcla"/>
-                        <Button text="Debug" press="onDebugButton"/>
+                        <Button text="Debug" press="onDebugBtn"/>
                     </VBox>-->
-                    <Button text="Debug" press="onDebugBtn"/>
                     <!-- <Title text="Ordenes Mezcla" level="H2"/> -->
                     <ScrollContainer id="cajaScroll" height="{listConfig>/currentMainSize}" 
                         width="100%" horizontal="true" vertical="true" focusable="true">
@@ -24,6 +23,7 @@ height="100%" width="100%">
                             mode="SingleSelectMaster"
                             sticky="HeaderToolbar"
                             selectionChange="onListItemPress"
+                            press="onListItemPress"
                             >
                             <headerToolbar>
                                 <OverflowToolbar>
@@ -67,7 +67,7 @@ height="100%" width="100%">
                             </columns>
                             <items>
                                 <!--<ColumnListItem type="Active" press="onListItemPress" >-->
-                                <ColumnListItem type="Active">
+                                <ColumnListItem type="Active" press="onListItemPress">
                                     <cells>
                                         <Text
                                             text="{

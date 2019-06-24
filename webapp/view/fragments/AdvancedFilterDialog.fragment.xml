@@ -3,25 +3,42 @@
 	xmlns:core="sap.ui.core">
 	<Dialog
         id="AdvancedFilterDialog"
-		stretch="true"
+		contentWidth="80%"
         stretchOnPhone="true"
         title="Búsqueda Avanzada">
-        <beginButton>
+        <buttons>
+            <Button
+                text="Buscar"
+                press="onAdvancedFilter"/>
+            <Button
+                text="Restablecer"
+                press="onRemoveTableFilters"/>
             <Button
                 text="Cerrar"
                 press="onCloseFilterDialog"/>
-        </beginButton>
-        <VBox>
+        </buttons>
+        <VBox alignContent="Center" class="sapUiLargeMargin">
             <Label text="Material"/>
             <!-- Use binding property instead of getSelectedItems() using id -->
             <MultiComboBox
+                id="materialFilterCombo"
+                selectionFinish="onMaterialFilterSelection"
                 items="{
                     path: 'modmcmateriales>/soap:Envelope/soap:Body/XacuteResponse/Rowset/Row/O_XML_DOCUMENT/OT_MATERIALES/item/',
-                    sorter: { path: 'modmcmateriales>DESCRIPCION/#text' }
+                    sorter: { path: 'DESCRIPCION/#text' }
                 }">
                 <core:Item key="{modmcmateriales>MATERIAL/#text}" text="{modmcmateriales>DESCRIPCION/#text}"/>
             </MultiComboBox>
             <Label text="Recurso"/>
+            <MultiComboBox
+                id="resourceFilterCombo"
+                selectionFinish="onResourceFilterSelection"
+                items="{
+                    path: 'modallresources>/results/',
+                    sorter: { path: 'DESCRIPCION' }
+                }">
+                <core:Item key="{modallresources>RECURSO}" text="{modallresources>DESCRIPCION}"/>
+            </MultiComboBox>
             <Label text="Fecha Desde"/>
             <DatePicker
                 value="{modadvfilter>/fechadesde}"

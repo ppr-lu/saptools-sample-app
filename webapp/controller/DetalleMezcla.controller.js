@@ -78,10 +78,11 @@ sap.ui.define([
             //If at the end we append ".item", we dont get a reference to it
             var content2Fix = [
                 oData["soap:Envelope"]["soap:Body"].XacuteResponse.Rowset.Row.O_XML_DOCUMENT.O_DETALLE_ORDEN_MEZCLA.MATERIALES_ORDEN,
-                oData["soap:Envelope"]["soap:Body"].XacuteResponse.Rowset.Row.O_XML_DOCUMENT_2.OT_DETALLE_COMPOSICION
+                oData["soap:Envelope"]["soap:Body"].XacuteResponse.Rowset.Row.O_XML_DOCUMENT_2.OT_DETALLE_COMPOSICION,
+                oData["soap:Envelope"]["soap:Body"].XacuteResponse.Rowset.Row.O_XML_DOCUMENT.O_DETALLE_ORDEN_MEZCLA.ORDENES_PROCESO
             ];
             for(var i=0;i<content2Fix.length;i++){
-                if(!Array.isArray(content2Fix[i].item)){
+                if(content2Fix[i].item && !Array.isArray(content2Fix[i].item)){
                     content2Fix[i].item=[content2Fix[i].item];
                 }
             }
