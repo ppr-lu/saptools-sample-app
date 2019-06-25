@@ -1,6 +1,7 @@
 <core:FragmentDefinition
 	xmlns="sap.m"
-	xmlns:core="sap.ui.core">
+	xmlns:core="sap.ui.core"
+    xmlns:unified="sap.ui.unified">
 	<Dialog
         id="AdvancedFilterDialog"
 		contentWidth="80%"

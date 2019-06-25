@@ -7,7 +7,9 @@ sap.ui.define([
     "simple-app/utils/formatter",
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
-], function(Controller, XMLModel, JSONModel, Fragment, Util, Formatter, Filter, FilterOperator) {
+    "sap/ui/unified/Calendar",
+    "sap/m/MessageBox"
+], function(Controller, XMLModel, JSONModel, Fragment, Util, Formatter, Filter, FilterOperator, Calendar, MessageBox) {
 	"use strict";
 
 	return Controller.extend("simple-app.controller.ListaMezclas", {
@@ -341,10 +343,7 @@ sap.ui.define([
                 oGenData = [oGenData];
             }
             //HARDCODED Descriptions
-            var recursosDescr = { 
-                TF: "Torre Fusora",
-                HRB: "Horno Rotativo"
-            }
+            var recursosDescr = Util.getResourcesKeyValue();
 
             for(var i=0;i<oGenData.length;i++){
                 var currentMixOrder = oGenData[i];
@@ -616,16 +615,20 @@ sap.ui.define([
             })];
 
             //fecha
-            if(fromDate){
+            if(fromDate && (toDate==="" || fromDate < toDate)){
                 dateFilter.push(new Filter("FECHA/#text", FilterOperator.GE, fromDate));
             }
-            if(toDate){
+            if(toDate && toDate>fromDate){
                 dateFilter.push(new Filter("FECHA/#text", FilterOperator.LE, toDate));
             }
             dateFilter = [new Filter({
                 filters: dateFilter,
                 and: true
             })];
+
+            if(fromDate > toDate && toDate !== ""){
+                MessageBox.information("La fecha inicial es superior a la final. No se tendrán en cuenta.");
+            }
 
 
             //filtro final

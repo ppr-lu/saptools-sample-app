@@ -7,26 +7,50 @@
     color: #ffffff !important;
 }
 
+/*Used for visually merging several tables into one*/
 .fixedCellHeight .sapMListTblCell {
     height: 5em ;
 }
 
+/* Used for icons in forms whihc automatically align to right */
 .alignLeft {
     text-align: left;
 }
 
+/* Remove footer of the detail page */
 .customDetailCSS .sapMFooter-CTX{
     display: none;
 }
 
+/* Remove large margins */
 .customDetailCSS .sapUxAPObjectPageSection{
     margin-top: 0em;
 }
 
+/* Hide empty blocks */
 .customDetailCSS .sapUxAPObjectPageSectionHeader{
     display: none;
 }
 
+/* Less margin between subsections */
 .customDetailCSS .sapUxAPBlockContainer{
     padding: 0rem 2rem 0rem 2rem;
+}
+
+
+/* TAGs closer to one another (remove margins)*/
+.customDetailCSS .sapUiRespGridSpanXL6 {
+    width: auto;
+}
+
+.customDetailCSS .sapUiRespGridSpanL4 {
+    width: auto;
+}
+
+.customDetailCSS .sapUiRespGridSpanM6{
+    width: auto;
+}
+
+.customDetailCSS  .sapUiRespGridSpanS12{
+    width: auto;
 }

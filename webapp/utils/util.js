@@ -215,6 +215,26 @@ sap.ui.define([
             });
         },
 
+        getResourcesKeyValue: function(){
+            var recursosDescr = { 
+                TF: "Torre Fusora",
+                HRB: "Horno Rotativo"
+            };
+            return recursosDescr;
+        },
+
+        getFlowsKeyValue: function(){
+            var flujoDescr = { 
+                TFHM1: 'TF para HM1',
+                TFHM2: 'TF para HM2',
+                TFHM2TFHRB: 'TF para HM2 con TF + HRB',
+                HRBHM2TFHR: 'HRB para HM2 con TF + HRB',
+                HRBHM2: 'HRB para HM2',
+                HRBHM3: 'HRB para HM3'
+            };
+            return flujoDescr;
+        },
+
     };
 
 });

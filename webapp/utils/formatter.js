@@ -1,4 +1,6 @@
-sap.ui.define([], function () {
+sap.ui.define([
+    "simple-app/utils/util"
+], function (Util) {
 	"use strict";
 	return {
 		noLeadingZeroes: function(value){
@@ -41,6 +43,26 @@ sap.ui.define([], function () {
                 icon = "sap-icon://accept";
             }
             return icon;
+        },
+        resourceKeyToText: function(value){
+            //HARDCODED Descriptions
+            var recursosDescr = Util.getResourcesKeyValue();
+            var descr = recursosDescr[value];
+            if(descr){
+                return descr;
+            }else{
+                return value;
+            }
+        },
+        flowKeyToText: function(value){
+            //HARDCODED Descriptions
+            var flujoDescr = Util.getFlowsKeyValue();
+            var descr = flujoDescr[value];
+            if(descr){
+                return descr;
+            }else{
+                return value;
+            }
         }
 	};
 });
