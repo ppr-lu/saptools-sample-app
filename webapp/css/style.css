@@ -54,3 +54,11 @@
 .customDetailCSS  .sapUiRespGridSpanS12{
     width: auto;
 }
+
+.smallColumn {
+    width: 8em;
+}
+
+.mediumColumn {
+    width: 12em;
+}

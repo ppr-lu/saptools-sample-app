@@ -204,41 +204,70 @@ sap.ui.define([
 
                 //Peso real
                 for(var i=0;i<aMaterialData.length;i++){
+                    //patch: in case aMaterialCompData has a length shorter than aMaterialData (aMaterialCompData[i] = undefined)
+                    //we set currentMaterialCompData = {}, so that currentMaterialCompData["RENDIMIENTO"] = undefined instead of giving error
+                    let currentMaterialData = aMaterialData[i];
+                    let currentMaterialCompData = aMaterialCompData[i];
+                    if(currentMaterialCompData === undefined){
+                        currentMaterialCompData = {};
+                    }
+
                     if(type === "IDEAL"){
-                        aMaterialData[i]["PESO_REAL_IDEAL"] = parseInt(aMaterialData[i]["PESO_IDEAL"]["#text"],10) * parseInt(aMaterialCompData[i]["RENDIMIENTO"]["#text"],10) / 100;
-                        totalPesoRealIdeal += aMaterialData[i]["PESO_REAL_IDEAL"];
-                        totalPesoRendimiento += parseInt(aMaterialData[i]["PESO_IDEAL"]["#text"],10) * parseInt(aMaterialCompData[i]["RENDIMIENTO"]["#text"],10) / 100;
+                        let currentPesoIdeal = (currentMaterialData["PESO_IDEAL"] ? parseInt(currentMaterialData["PESO_IDEAL"]["#text"],10) : 0);
+                        let currentRendimiento = (currentMaterialCompData["RENDIMIENTO"] ? parseInt(currentMaterialCompData["RENDIMIENTO"]["#text"],10) : 0 );
+                        currentMaterialData["PESO_REAL_IDEAL"] = currentPesoIdeal * currentRendimiento / 100;
+                        totalPesoRealIdeal += currentMaterialData["PESO_REAL_IDEAL"];
+                        totalPesoRendimiento += currentPesoIdeal * currentRendimiento / 100;
                     }else if(type==="CARGADO"){
-                        aMaterialData[i]["PESO_REAL_CARGADO"] = parseInt(aMaterialData[i]["PESO_CARGADO"]["#text"],10) * parseInt(aMaterialCompData[i]["RENDIMIENTO"]["#text"],10) / 100;
-                        totalPesoRealCargado += aMaterialData[i]["PESO_REAL_CARGADO"];
-                        totalPesoRendimiento += parseInt(aMaterialData[i]["PESO_CARGADO"]["#text"],10) * parseInt(aMaterialCompData[i]["RENDIMIENTO"]["#text"],10) / 100;
+                        let currentPesoCargado = (currentMaterialData["PESO_CARGADO"] ? parseInt(currentMaterialData["PESO_CARGADO"]["#text"],10) : 0);
+                        let currentRendimiento = (currentMaterialCompData["RENDIMIENTO"] ? parseInt(currentMaterialCompData["RENDIMIENTO"]["#text"],10) : 0 );
+                        currentMaterialData["PESO_REAL_CARGADO"] = currentPesoCargado * currentRendimiento / 100;
+                        totalPesoRealCargado += currentMaterialData["PESO_REAL_CARGADO"];
+                        totalPesoRendimiento += currentPesoCargado * currentRendimiento / 100;
                     }
                 }
 
                 //Porcentaje real
                 for(var i=0;i<aMaterialData.length;i++){
+                    //patch: in case aMaterialCompData has a length shorter than aMaterialData (aMaterialCompData[i] = undefined)
+                    //we set currentMaterialCompData = {}, so that currentMaterialCompData["RENDIMIENTO"] = undefined instead of giving error
+                    let currentMaterialData = aMaterialData[i];
+                    let currentMaterialCompData = aMaterialCompData[i];
+                    if(currentMaterialCompData === undefined){
+                        currentMaterialCompData = {};
+                    }
+
                     if(type === "IDEAL"){
                         if (totalPesoRealIdeal > 0) {
-                            aMaterialData[i]['PORCENTAJE_REAL_IDEAL'] = aMaterialData[i]['PESO_REAL_IDEAL'] / totalPesoRealIdeal * 100;
+                            currentMaterialData['PORCENTAJE_REAL_IDEAL'] = currentMaterialData['PESO_REAL_IDEAL'] / totalPesoRealIdeal * 100;
                         } else {
-                            aMaterialData[i]['PORCENTAJE_REAL_IDEAL'] = 0;
+                            currentMaterialData['PORCENTAJE_REAL_IDEAL'] = 0;
                         }
                     }else if(type==="CARGADO"){
                         if (totalPesoRealCargado > 0) {
-                            aMaterialData[i]['PORCENTAJE_REAL_CARGADO'] = aMaterialData[i]['PESO_REAL_CARGADO'] / totalPesoRealCargado * 100;
+                            currentMaterialData['PORCENTAJE_REAL_CARGADO'] = currentMaterialData['PESO_REAL_CARGADO'] / totalPesoRealCargado * 100;
                         } else {
-                            aMaterialData[i]['PORCENTAJE_REAL_CARGADO'] = 0;
+                            currentMaterialData['PORCENTAJE_REAL_CARGADO'] = 0;
                         }
                     }
                 }
 
                 //pesos componentes
                 for(var i=0;i<aMaterialData.length;i++){
+                    //patch: in case aMaterialCompData has a length shorter than aMaterialData (aMaterialCompData[i] = undefined)
+                    //we set currentMaterialCompData = {}, so that currentMaterialCompData["RENDIMIENTO"] = undefined instead of giving error
+                    let currentMaterialData = aMaterialData[i];
+                    let currentMaterialCompData = aMaterialCompData[i];
+                    if(currentMaterialCompData === undefined){
+                        currentMaterialCompData = {};
+                    }
+
                     pesos.forEach(element => {
+                        let currentMaterialElementComposition = (currentMaterialCompData[element.field] ? parseFloat(currentMaterialCompData[element.field]["#text"]) : 0);
                         if (type == 'IDEAL') {
-                            element.value += aMaterialData[i]['PORCENTAJE_REAL_IDEAL'] * parseFloat(aMaterialCompData[i][element.field]["#text"])  / 100;
+                            element.value += currentMaterialData['PORCENTAJE_REAL_IDEAL'] * currentMaterialElementComposition / 100;
                         } else if (type == 'CARGADO') {
-                            element.value += aMaterialData[i]['PORCENTAJE_REAL_CARGADO'] * parseFloat(aMaterialCompData[i][element.field]["#text"])  / 100;
+                            element.value += currentMaterialData['PORCENTAJE_REAL_CARGADO'] * currentMaterialElementComposition / 100;
                         }
                     });
                 }

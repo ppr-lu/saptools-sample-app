@@ -77,8 +77,9 @@ class="customDetailCSS">
 					<ux:ObjectPageSubSection title="Materiales">
 						<ux:blocks>
                             <VBox>
-                                <HBox width="100%">
-                                    <VBox>
+                                <!-- Detalle en Desktop y tablet-->
+                                <HBox width="100%" visible="false">
+                                    <VBox width="30%">
                                         <!-- <Title text="Material" level="H2"/> -->
                                         <ScrollContainer id="mixDetailContainerLeft"
                                             height="100%" width="100%" vertical="true" horizontal="true" focusable="true">
@@ -91,18 +92,19 @@ class="customDetailCSS">
                                                     <OverflowToolbar>
                                                         <content>
                                                             <!-- <Title text="Material" level="H2"/> -->
+                                                            <Button icon="sap-icon://add"/>
                                                             <ToolbarSpacer/>
                                                         </content>
                                                     </OverflowToolbar>
                                                 </headerToolbar>
                                                 <columns>
-                                                    <Column width="100px">
+                                                    <Column styleClass="smallColumn">
                                                         <Text text="Material"/>
                                                     </Column>
-                                                    <Column width="100px">
+                                                    <Column styleClass="smallColumn">
                                                         <Text text="Desc. Material"/>
                                                     </Column>
-                                                    <Column width="100px">
+                                                    <Column styleClass="smallColumn">
                                                         <Text text="Lote"/>
                                                     </Column>
                                                 </columns>
@@ -124,10 +126,10 @@ class="customDetailCSS">
                                             </Table>
                                         </ScrollContainer>
                                     </VBox>
-                                    <VBox>
+                                    <VBox width="70%">
                                         <!-- <Title text="Composición" level="H2"/> -->
                                         <ScrollContainer id="mixDetailContainerRight"
-                                            height="100%" width="40%" vertical="true" horizontal="true" focusable="true">
+                                            height="100%" width="100%" vertical="true" horizontal="true" focusable="true">
                                             <HBox>
                                                 <Table 
                                                     class="fixedCellHeight" 
@@ -137,29 +139,29 @@ class="customDetailCSS">
                                                     <headerToolbar>
                                                         <OverflowToolbar>
                                                             <content>
-                                                                <!-- <Title text="Composición" level="H2"/> -->
+                                                                <!-- <Title text="Composición" level="H2"/>
                                                                 <ToolbarSpacer/>
-                                                                <!--<Button text="Close" press="onDetailListClose"/>-->
+                                                                <Button text="Close" press="onDetailListClose"/> -->
                                                             </content>
                                                         </OverflowToolbar>
                                                     </headerToolbar>
                                                     <columns>
-                                                        <Column width="100px">
+                                                        <Column styleClass="smallColumn">
                                                             <Text text="Activa"/>
                                                         </Column>
-                                                        <Column hAlign="Right" width="100px">
+                                                        <Column hAlign="Right" styleClass="smallColumn">
                                                             <Text text="Peso ideal"/>
                                                         </Column>
-                                                        <Column hAlign="Right" width="100px">
+                                                        <Column hAlign="Right" styleClass="smallColumn">
                                                             <Text text="Peso cargado"/>
                                                         </Column>
-                                                        <Column width="100px">
+                                                        <Column styleClass="smallColumn">
                                                             <Text text="UM"/>
                                                         </Column>
-                                                        <Column hAlign="Right" width="100px">
+                                                        <Column hAlign="Right" styleClass="smallColumn">
                                                             <Text text="% ideal"/>
                                                         </Column>
-                                                        <Column hAlign="Right" width="100px">
+                                                        <Column hAlign="Right" styleClass="smallColumn">
                                                             <Text text="% cargado"/>
                                                         </Column>
                                                     </columns>
@@ -200,52 +202,52 @@ class="customDetailCSS">
                                                         </OverflowToolbar>
                                                     </headerToolbar>
                                                     <columns>
-                                                        <Column hAlign="Right" width="100px">
+                                                        <Column hAlign="Right" styleClass="smallColumn">
                                                             <Text text="Rendim. (%)"/>
                                                         </Column>
-                                                        <Column hAlign="Right" width="100px">
+                                                        <Column hAlign="Right" styleClass="smallColumn">
                                                             <Text text="Al (%)"/>
                                                         </Column>
-                                                        <Column hAlign="Right" width="100px">
+                                                        <Column hAlign="Right" styleClass="smallColumn">
                                                             <Text text="Si (%)"/>
                                                         </Column>
-                                                        <Column hAlign="Right" width="100px">
+                                                        <Column hAlign="Right" styleClass="smallColumn">
                                                             <Text text="Fe (%)"/>
                                                         </Column>
-                                                        <Column hAlign="Right" width="100px">
+                                                        <Column hAlign="Right" styleClass="smallColumn">
                                                             <Text text="Cu (%)"/>
                                                         </Column>
-                                                        <Column hAlign="Right" width="100px">
+                                                        <Column hAlign="Right" styleClass="smallColumn">
                                                             <Text text="Mn (%)"/>
                                                         </Column>
-                                                        <Column hAlign="Right" width="100px">
+                                                        <Column hAlign="Right" styleClass="smallColumn">
                                                             <Text text="Mg (%)"/>
                                                         </Column>
-                                                        <Column hAlign="Right" width="100px">
+                                                        <Column hAlign="Right" styleClass="smallColumn">
                                                             <Text text="Cr (%)"/>
                                                         </Column>
-                                                        <Column hAlign="Right" width="100px">
+                                                        <Column hAlign="Right" styleClass="smallColumn">
                                                             <Text text="Ni (%)"/>
                                                         </Column>
-                                                        <Column hAlign="Right" width="100px">
+                                                        <Column hAlign="Right" styleClass="smallColumn">
                                                             <Text text="Zn (%)"/>
                                                         </Column>
-                                                        <Column hAlign="Right" width="100px">
+                                                        <Column hAlign="Right" styleClass="smallColumn">
                                                             <Text text="Pb (%)"/>
                                                         </Column>
-                                                        <Column hAlign="Right" width="100px">
+                                                        <Column hAlign="Right" styleClass="smallColumn">
                                                             <Text text="Sn (%)"/>
                                                         </Column>
-                                                        <Column hAlign="Right" width="100px">
+                                                        <Column hAlign="Right" styleClass="smallColumn">
                                                             <Text text="Ti (%)"/>
                                                         </Column>
-                                                        <Column hAlign="Right" width="100px">
+                                                        <Column hAlign="Right" styleClass="smallColumn">
                                                             <Text text="Sr (%)"/>
                                                         </Column>
-                                                        <Column hAlign="Right" width="100px">
+                                                        <Column hAlign="Right" styleClass="smallColumn">
                                                             <Text text="Ca (%)"/>
                                                         </Column>
-                                                        <Column hAlign="Right" width="100px">
+                                                        <Column hAlign="Right" styleClass="smallColumn">
                                                             <Text text="P (%)"/>
                                                         </Column>
                                                     </columns>
@@ -324,74 +326,326 @@ class="customDetailCSS">
                                         </ScrollContainer>
                                     </VBox>
                                 </HBox>
+                                <!-- Detalle en movil -->
                                 <HBox width="100%">
+                                    <VBox width="30%">
+                                        <!-- <Title text="Material" level="H2"/> -->
+                                        <ScrollContainer id="mixDetailContainerLeftPhone"
+                                            height="100%" width="100%" vertical="true" horizontal="true" focusable="true">
+                                            <Table 
+                                                class="fixedCellHeight"
+                                                id="mixDetailLeftPhone" 
+                                                items="{path: 'moddetailjson>/soap:Envelope/soap:Body/XacuteResponse/Rowset/Row/O_XML_DOCUMENT/O_DETALLE_ORDEN_MEZCLA/MATERIALES_ORDEN/item/' }"
+                                                >
+                                                <headerToolbar>
+                                                    <OverflowToolbar>
+                                                        <content>
+                                                            <!-- <Title text="Material" level="H2"/> -->
+                                                            <Button icon="sap-icon://add"/>
+                                                            <ToolbarSpacer/>
+                                                        </content>
+                                                    </OverflowToolbar>
+                                                </headerToolbar>
+                                                <columns>
+                                                    <Column minScreenWidth="Tablet" demandPopin="true">
+                                                        <Text text="Material" />
+                                                    </Column>
+                                                    <Column styleClass="smallColumn" minScreenWidth="Tablet" demandPopin="true">
+                                                        <Text text="Desc. Material"/>
+                                                    </Column>
+                                                    <Column styleClass="smallColumn" minScreenWidth="Tablet" demandPopin="true">
+                                                        <Text text="Lote"/>
+                                                    </Column>
+                                                </columns>
+                                                <items>
+                                                    <ColumnListItem>
+                                                        <cells>
+                                                            <Text
+                                                                text="{
+                                                                path: 'moddetailjson>MATERIAL/#text',
+                                                                formatter: '.formatter.noLeadingZeroes'
+                                                                }"/>
+                                                            <Text
+                                                                text="{moddetailjson>DESC_MATERIAL/#text}" />
+                                                            <Text
+                                                                text="{moddetailjson>LOTE/#text}" />
+                                                        </cells>
+                                                    </ColumnListItem>
+                                                </items>
+                                            </Table>
+                                        </ScrollContainer>
+                                    </VBox>
+                                    <VBox width="70%">
+                                        <!-- <Title text="Composición" level="H2"/> -->
+                                        <ScrollContainer id="mixDetailContainerRightPhone"
+                                            height="100%" width="100%" vertical="true" horizontal="true" focusable="true">
+                                            <HBox>
+                                                <Table 
+                                                    class="fixedCellHeight" 
+                                                    id="mixDetailRightPart1Phone" 
+                                                    items="{path: 'moddetailjson>/soap:Envelope/soap:Body/XacuteResponse/Rowset/Row/O_XML_DOCUMENT/O_DETALLE_ORDEN_MEZCLA/MATERIALES_ORDEN/item/' }"
+                                                    >
+                                                    <headerToolbar>
+                                                        <OverflowToolbar>
+                                                            <content>
+                                                                <!-- <Title text="Composición" level="H2"/>
+                                                                <ToolbarSpacer/>
+                                                                <Button text="Close" press="onDetailListClose"/> -->
+                                                            </content>
+                                                        </OverflowToolbar>
+                                                    </headerToolbar>
+                                                    <columns>
+                                                        <Column styleClass="smallColumn">
+                                                            <Text text="Activa"/>
+                                                        </Column>
+                                                        <Column hAlign="Right" styleClass="smallColumn">
+                                                            <Text text="Peso ideal"/>
+                                                        </Column>
+                                                        <Column hAlign="Right" styleClass="smallColumn">
+                                                            <Text text="Peso cargado"/>
+                                                        </Column>
+                                                        <Column styleClass="smallColumn">
+                                                            <Text text="UM"/>
+                                                        </Column>
+                                                        <Column hAlign="Right" styleClass="smallColumn">
+                                                            <Text text="% ideal"/>
+                                                        </Column>
+                                                        <Column hAlign="Right" styleClass="smallColumn">
+                                                            <Text text="% cargado"/>
+                                                        </Column>
+                                                    </columns>
+                                                    <items>
+                                                        <ColumnListItem>
+                                                            <cells>
+                                                                <core:Icon 
+                                                                    src="{ path: 'moddetailjson>ACTIVA/#text',
+                                                                    formatter: '.formatter.checkIcon' }"/>
+                                                                <Text
+                                                                    text="{ path: 'moddetailjson>PESO_IDEAL/#text' }"/>
+                                                                <Text
+                                                                    text="{ path: 'moddetailjson>PESO_CARGADO/#text' }"/>
+                                                                <Text
+                                                                    text="{ path: 'moddetailjson>UNIDAD/#text' }"/>
+                                                                <Text
+                                                                    text="{ path: 'moddetailjson>PORCENTAJE_IDEAL/#text',
+                                                                    formatter: '.formatter.noDecimals' }"/>
+                                                                <Text
+                                                                    text="{ path: 'moddetailjson>PORCENTAJE/#text',
+                                                                    formatter: '.formatter.noDecimals' }"/>
+                                                            </cells>
+                                                        </ColumnListItem>
+                                                    </items>
+                                                </Table>
+                                                <Table
+                                                    class="fixedCellHeight"
+                                                    id="mixDetailRightPart2Phone" 
+                                                    items="{path: 'moddetailjson>/soap:Envelope/soap:Body/XacuteResponse/Rowset/Row/O_XML_DOCUMENT_2/OT_DETALLE_COMPOSICION/item/' }"
+                                                    >
+                                                    <headerToolbar>
+                                                        <OverflowToolbar>
+                                                            <content>
+                                                                <Title text="" level="H2"/>
+                                                                <ToolbarSpacer/>
+                                                                <!--<Button text="Close" press="onDetailListClose"/>-->
+                                                            </content>
+                                                        </OverflowToolbar>
+                                                    </headerToolbar>
+                                                    <columns>
+                                                        <Column hAlign="Right" styleClass="smallColumn">
+                                                            <Text text="Rendim. (%)"/>
+                                                        </Column>
+                                                        <Column hAlign="Right" styleClass="smallColumn">
+                                                            <Text text="Al (%)"/>
+                                                        </Column>
+                                                        <Column hAlign="Right" styleClass="smallColumn">
+                                                            <Text text="Si (%)"/>
+                                                        </Column>
+                                                        <Column hAlign="Right" styleClass="smallColumn">
+                                                            <Text text="Fe (%)"/>
+                                                        </Column>
+                                                        <Column hAlign="Right" styleClass="smallColumn">
+                                                            <Text text="Cu (%)"/>
+                                                        </Column>
+                                                        <Column hAlign="Right" styleClass="smallColumn">
+                                                            <Text text="Mn (%)"/>
+                                                        </Column>
+                                                        <Column hAlign="Right" styleClass="smallColumn">
+                                                            <Text text="Mg (%)"/>
+                                                        </Column>
+                                                        <Column hAlign="Right" styleClass="smallColumn">
+                                                            <Text text="Cr (%)"/>
+                                                        </Column>
+                                                        <Column hAlign="Right" styleClass="smallColumn">
+                                                            <Text text="Ni (%)"/>
+                                                        </Column>
+                                                        <Column hAlign="Right" styleClass="smallColumn">
+                                                            <Text text="Zn (%)"/>
+                                                        </Column>
+                                                        <Column hAlign="Right" styleClass="smallColumn">
+                                                            <Text text="Pb (%)"/>
+                                                        </Column>
+                                                        <Column hAlign="Right" styleClass="smallColumn">
+                                                            <Text text="Sn (%)"/>
+                                                        </Column>
+                                                        <Column hAlign="Right" styleClass="smallColumn">
+                                                            <Text text="Ti (%)"/>
+                                                        </Column>
+                                                        <Column hAlign="Right" styleClass="smallColumn">
+                                                            <Text text="Sr (%)"/>
+                                                        </Column>
+                                                        <Column hAlign="Right" styleClass="smallColumn">
+                                                            <Text text="Ca (%)"/>
+                                                        </Column>
+                                                        <Column hAlign="Right" styleClass="smallColumn">
+                                                            <Text text="P (%)"/>
+                                                        </Column>
+                                                    </columns>
+                                                    <items>
+                                                        <ColumnListItem>
+                                                            <cells>
+                                                                <Text
+                                                                    text="{ path: 'moddetailjson>RENDIMIENTO/#text',
+                                                                    formatter: '.formatter.noDecimals' }"/>
+                                                                <Text
+                                                                    text="{
+                                                                    path: 'moddetailjson>ALUMINIO/#text',
+                                                                    formatter: '.formatter.trimDecimals' }"/>
+                                                                <Text
+                                                                    text="{
+                                                                    path: 'moddetailjson>SILICIO/#text',
+                                                                    formatter: '.formatter.trimDecimals' }"/>
+                                                                <Text
+                                                                    text="{
+                                                                    path: 'moddetailjson>HIERRO/#text',
+                                                                    formatter: '.formatter.trimDecimals'  }"/>
+                                                                <Text
+                                                                    text="{
+                                                                    path: 'moddetailjson>COBRE/#text',
+                                                                    formatter: '.formatter.trimDecimals' }"/>
+                                                                <Text
+                                                                    text="{
+                                                                    path: 'moddetailjson>MANGANESO/#text',
+                                                                    formatter: '.formatter.trimDecimals' }"/>
+                                                                <Text
+                                                                    text="{
+                                                                    path: 'moddetailjson>MAGNESIO/#text',
+                                                                    formatter: '.formatter.trimDecimals' }"/>
+                                                                <Text
+                                                                    text="{
+                                                                    path: 'moddetailjson>CROMO/#text',
+                                                                    formatter: '.formatter.trimDecimals' }"/>
+                                                                <Text
+                                                                    text="{
+                                                                    path: 'moddetailjson>NIQUEL/#text',
+                                                                    formatter: '.formatter.trimDecimals' }"/>
+                                                                <Text
+                                                                    text="{
+                                                                    path: 'moddetailjson>ZINC/#text',
+                                                                    formatter: '.formatter.trimDecimals' }"/>
+                                                                <Text
+                                                                    text="{
+                                                                    path: 'moddetailjson>PLOMO/#text',
+                                                                    formatter: '.formatter.trimDecimals' }"/>
+                                                                <Text
+                                                                    text="{
+                                                                    path: 'moddetailjson>ESTANO/#text',
+                                                                    formatter: '.formatter.trimDecimals'  }"/>
+                                                                <Text
+                                                                    text="{
+                                                                    path: 'moddetailjson>TITANIO/#text',
+                                                                    formatter: '.formatter.trimDecimals' }"/>
+                                                                <Text
+                                                                    text="{
+                                                                    path: 'moddetailjson>ESTRONCIO/#text',
+                                                                    formatter: '.formatter.trimDecimals'  }"/>
+                                                                <Text
+                                                                    text="{
+                                                                    path: 'moddetailjson>CALCIO/#text',
+                                                                    formatter: '.formatter.trimDecimals' }"/>
+                                                                <Text
+                                                                    text="{
+                                                                    path: 'moddetailjson>FOSFORO/#text',
+                                                                    formatter: '.formatter.trimDecimals' }"/>
+                                                                
+                                                            </cells>
+                                                        </ColumnListItem>
+                                                    </items>
+                                                </Table> 
+                                            </HBox>
+                                        </ScrollContainer>
+                                    </VBox>
+                                </HBox>
+
+                                <VBox width="100%" class="sapUiMediumMarginTop">
+                                    <Title text="Totales composición" class="sapUiSmallMargin"/>
                                     <!-- <Label text="aaa - {modcomposition>/test}"/> -->
+                                    <Button text="Añadir Aleación"/>
                                     <ScrollContainer
-                                        height="100%" width="65%" vertical="true" horizontal="true" focusable="true">
+                                        height="100%" width="100%" vertical="true" horizontal="true" focusable="true">
                                         <Table 
                                             id="materialCompositionTable" 
                                             items="{path: 'modcomposition>/results/' }"
                                             
                                             >
                                             <headerToolbar>
-                                                <OverflowToolbar>
+                                                <OverflowToolbar visible="false">
                                                     <content>
                                                         <!-- <Title text="Material" level="H2"/> -->
-                                                        <Button text="Añadir Material"/>
+                                                        <!-- <Button text="Añadir Material"/> -->
                                                         <ToolbarSpacer/>
                                                     </content>
                                                 </OverflowToolbar>
                                             </headerToolbar>
                                             <columns>
-                                                <Column width="12em">
+                                                <Column styleClass="smallColumn">
                                                     <Text text=" "/>
                                                 </Column>
-                                                <Column width="8em">
+                                                <Column styleClass="smallColumn">
                                                     <Text text="Peso (kg)"/>
                                                 </Column>
-                                                <Column width="8em">
+                                                <Column styleClass="smallColumn">
                                                     <Text text="Al (%)"/>
                                                 </Column>
-                                                <Column width="8em">
+                                                <Column styleClass="smallColumn">
                                                     <Text text="Si (%)"/>
                                                 </Column>
-                                                <Column width="8em">
+                                                <Column styleClass="smallColumn">
                                                     <Text text="Fe (%)"/>
                                                 </Column>
-                                                <Column width="8em">
+                                                <Column styleClass="smallColumn">
                                                     <Text text="Cu (%)"/>
                                                 </Column>
-                                                <Column width="8em">
+                                                <Column styleClass="smallColumn">
                                                     <Text text="Mn (%)"/>
                                                 </Column>
-                                                <Column width="8em">
+                                                <Column styleClass="smallColumn">
                                                     <Text text="Mg (%)"/>
                                                 </Column>
-                                                <Column width="8em">
+                                                <Column styleClass="smallColumn">
                                                     <Text text="Cr (%)"/>
                                                 </Column>
-                                                <Column width="8em">
+                                                <Column styleClass="smallColumn">
                                                     <Text text="Ni (%)"/>
                                                 </Column>
-                                                <Column width="8em">
+                                                <Column styleClass="smallColumn">
                                                     <Text text="Zn (%)"/>
                                                 </Column>
-                                                <Column width="8em">
+                                                <Column styleClass="smallColumn">
                                                     <Text text="Pb (%)"/>
                                                 </Column>
-                                                <Column width="8em">
+                                                <Column styleClass="smallColumn">
                                                     <Text text="Sn (%)"/>
                                                 </Column>
-                                                <Column width="8em">
+                                                <Column styleClass="smallColumn">
                                                     <Text text="Ti (%)"/>
                                                 </Column>
-                                                <Column width="8em">
+                                                <Column styleClass="smallColumn">
                                                     <Text text="Sr (%)"/>
                                                 </Column>
-                                                <Column width="8em">
+                                                <Column styleClass="smallColumn">
                                                     <Text text="Ca (%)"/>
                                                 </Column>
-                                                <Column width="8em">
+                                                <Column styleClass="smallColumn">
                                                     <Text text="P (%)"/>
                                                 </Column>
                                             </columns>
@@ -420,7 +674,7 @@ class="customDetailCSS">
                                             </items>
                                         </Table>
                                     </ScrollContainer>
-                                </HBox>
+                                </VBox>
                             </VBox>
 
 						</ux:blocks>
@@ -429,9 +683,12 @@ class="customDetailCSS">
 
                     <ux:ObjectPageSubSection title="Órdenes Asociadas">
 						<ux:blocks>
-                            <HBox id="linkedOrders">
-                                
-                            </HBox>
+                            <VBox>
+                                <Button icon="sap-icon://add"/>
+                                <HBox id="linkedOrders">
+                                    
+                                </HBox>
+                            </VBox>
 						</ux:blocks>
 					</ux:ObjectPageSubSection>
                 

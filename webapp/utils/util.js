@@ -101,8 +101,35 @@ sap.ui.define([
             <s0:InputParams xmlns:s0=\"http://www.sap.com/xMII\" xmlns=\"http://www.sap.com/xMII\">\
             <s0:I_CENTRO>"+oSettings.centro+"</s0:I_CENTRO>\
             <s0:I_USER>"+oSettings.user+"</s0:I_USER>\
-            <s0:I_IDIOMA>"+oSettings.idioma+"</s0:I_IDIOMA>\
-            </s0:InputParams></s0:XacuteRequest></soap:Body></soap:Envelope>";
+            <s0:I_IDIOMA>"+oSettings.idioma+"</s0:I_IDIOMA>";
+            if(oSettings.materiales && oSettings.materiales.length > 0){
+                sReq+="<s0:I_LIST_MATERIALES>"+oSettings.materiales.toString()+"</s0:I_LIST_MATERIALES>";
+            }
+            if(oSettings.recursos && oSettings.recursos.length > 0){
+                sReq+="<s0:I_LIST_RECURSOS>"+oSettings.recursos+"/s0:I_LIST_RECURSOS>";
+            }
+            if(oSettings.fechaDesde && oSettings.fechaDesde !==""){
+                sReq+="<s0:I_FECHA_DESDE>"+oSettings.fechaDesde.replace(/-/g,"")+"</s0:I_FECHA_DESDE>";
+            }
+            if(oSettings.fechaHasta && oSettings.fechaHasta !== ""){
+                sReq+="<s0:I_FECHA_HASTA>"+oSettings.fechaHasta.replace(/-/g,"")+"</s0:I_FECHA_HASTA>";
+            }
+            sReq+="</s0:InputParams></s0:XacuteRequest></soap:Body></soap:Envelope>";
+
+
+            "<?xml version=\"1.0\" encoding=\"utf-8\"?>\
+            <soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"  xmlns:s0=\"http://www.sap.com/xMII\">\
+            <soap:Body><s0:XacuteRequest>\
+            <s0:InputParams xmlns:s0=\"http://www.sap.com/xMII\" xmlns=\"http://www.sap.com/xMII\">\
+            <s0:I_CENTRO>0901</s0:I_CENTRO>\
+            <s0:I_USER>PDOMINGUEZ</s0:I_USER>\
+            <s0:I_IDIOMA>S</s0:I_IDIOMA>\
+            <s0:I_LIST_MATERIALES>000000000000100974,000000000000100975,000000000000100921,000000000000100900</s0:I_LIST_MATERIALES>\
+            <s0:I_LIST_RECURSOS>TF,HRB</s0:I_LIST_RECURSOS>\
+            <s0:I_FECHA_DESDE>20190604</s0:I_FECHA_DESDE>\
+            <s0:I_FECHA_HASTA>20190618</s0:I_FECHA_HASTA>\
+            </s0:InputParams></s0:XacuteRequest></soap:Body></soap:Envelope>"
+
 
             return sReq;
         },

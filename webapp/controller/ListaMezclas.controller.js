@@ -58,6 +58,9 @@ sap.ui.define([
             var mainSize = oConfigModel.getProperty("/bigMainSize");
             oConfigModel.setProperty("/currentMainSize", mainSize);
             oConfigModel.setProperty("/detailsVisible", false);
+
+            var oTable = this.byId("generalTable");
+            oTable.removeSelections();
         },
 
         //make detail tables visible and shrink main table
@@ -181,15 +184,17 @@ sap.ui.define([
         },
 
         /** Retrieves data for the table */
-        onRetrieveListaOrdenMezcla: function(){
+        onRetrieveListaOrdenMezcla: function(params){
             var that = this;
-            var params = Util.getListaOrdenMezParams();
+            if(params === undefined){
+                params = Util.getListaOrdenMezParams();
+            }
             var settings = {
                 url: "http://desarrollos.lyrsa.es/XMII/SOAPRunner/MEFRAGSA/Fundicion/Produccion/Ord_Mezcla/TX_lista_orden_mez",
                 httpMethod: "POST",
                 reqParams: params,
-                successCallback: that.bindRetrievedData,
-                completeCallback: that._unsetGeneralTableBusy
+                successCallback: that.bindRetrievedData
+                //completeCallback: that._unsetGeneralTableBusy //Busyness is unset inside bindRetrieveData
             }
             that._setGeneralTableBusy();
             Util.sendSOAPRequest(settings, that);  
@@ -227,20 +232,20 @@ sap.ui.define([
         /**Used as ajax success callback for general list. Order of the parameters matter */
         bindRetrievedData: function (controllerInstance, data, textStatus, jqXHR){
             var oView = controllerInstance.getView();
-            var oXMLModel = new XMLModel();
-            var oJSONModel;
-            var oXML = Util.unescapeXML(data)
-            var xmlJson = Util.xmlToJson(oXML);
-            controllerInstance._fixGeneralData(xmlJson);
-            oXMLModel.setData(oXML);
-            oJSONModel = new JSONModel(xmlJson);
+            
+            var oDataXML = Util.unescapeXML(data)
+            var oDataJSON = Util.xmlToJson(oDataXML);
+            controllerInstance._fixGeneralData(oDataJSON);
+            var oJSONModel = new JSONModel(oDataJSON);
 
-            oView.setModel(oXMLModel,"modxml");
             oView.setModel(oJSONModel, "modjson");
 
             //Patch. Once general data has been retrieved, generate local models
             //with proper structure for other functionalities (filters).
             controllerInstance._genLocalModels();
+
+            //Unset busy indicator of general table after finishing everything
+            controllerInstance._unsetGeneralTableBusy();
         },
 
         /** Key - values of all materials */
@@ -273,7 +278,10 @@ sap.ui.define([
             this._addMaterials2AllMaterialModel();
             this._addProcessesMaterials2AllMaterialModel();
             this._genAllResourcesModel();
-            this._initAdvFilterModel();
+            //only once
+            if(this.getView().getModel("modadvfilter") === undefined){
+                this._initAdvFilterModel();
+            }
         },
 
         _initAllMaterialModel(controllerInstance){
@@ -363,7 +371,9 @@ sap.ui.define([
                 materiales: [],
                 recursos: [],
                 fechadesde: "",
-                fechahasta: ""
+                fechahasta: "",
+                last_fechadesde: "",
+                last_fechahasta: ""
             }
             oView.setModel(new JSONModel(oData), "modadvfilter");
         },
@@ -553,11 +563,12 @@ sap.ui.define([
         /**Uses modallmaterial and modadvfilter to retrieve all materials selected in modadvfilter and get a list
          * of the orders that contains said materials thanks to the content of modallmaterial.
          */
-        _getOrderIDsFromMaterialFilter: function(){
+        _getOrderIDsFromMaterials: function(aMaterialsIDs){
             var oView = this.getView();
-            var oFilterModel = oView.getModel("modadvfilter");
-            var oFilterData = oFilterModel.getData();
-            var selectedMaterials = oFilterData.materiales;
+            // var oFilterModel = oView.getModel("modadvfilter");
+            // var oFilterData = oFilterModel.getData();
+            // var selectedMaterials = oFilterData.materiales;
+            var selectedMaterials = aMaterialsIDs;
             var oOrderModel = oView.getModel("modallmaterial");
             var orderCorrespondenceData = oOrderModel.getData();
             var mixOrderList = [];
@@ -579,12 +590,86 @@ sap.ui.define([
             return mixOrderList;
         },
 
-        onAdvancedFilter: function(){
+        //Decide whether to filter locally or externally
+        onAdvancedFilter: function() {
+            var oView = this.getView();
+            var oFilterModel = oView.getModel("modadvfilter");
+            var oFilterData = oFilterModel.getData();
+
+            var fechadesde = oFilterData.fechadesde;
+            var fechahasta = oFilterData.fechahasta;
+            var last_fechadesde = oFilterData.last_fechadesde;
+            var last_fechahasta = oFilterData.last_fechahasta;
+            var isLocalFilter = false;
+
+            if(fechadesde > fechahasta && fechahasta !== ""){
+                MessageBox.information("La fecha inicial es superior a la final. No se tendrán en cuenta.");
+                isLocalFilter = true;
+            }
+
+            if(fechadesde === last_fechadesde && fechahasta === last_fechahasta){
+                isLocalFilter = true;
+            }
+
+            //Update last dates
+            oFilterData.last_fechadesde = fechadesde;
+            oFilterData.last_fechahasta = fechahasta;
+
+            if(isLocalFilter){
+                this.onAdvancedFilterLocally();
+            }else{
+                this.onAdvancedFilterRemotely();
+            }
+
+            //Close dialog
+            this.byId("AdvancedFilterDialog").close();
+        },
+
+        //Send a petition to the server with the filters specified. The response will contain the results already filtered.
+        onAdvancedFilterRemotely: function(){
             var oView = this.getView();
             var oFilterModel = oView.getModel("modadvfilter");
             var oFilterData = oFilterModel.getData();
             
-            var mixOrderIDList = this._getOrderIDsFromMaterialFilter();
+            var materialIDList = oFilterData.materiales;
+            var resourceIDList = oFilterData.recursos;
+            var fromDate = oFilterData.fechadesde; 
+            var toDate = oFilterData.fechahasta;
+
+            var oParams = {
+                //materiales: materialIDList,
+                //recursos: resourceIDList,
+                fechaDesde: fromDate,
+                fechaHasta: toDate
+            };
+
+            var that = this;
+            var reqParamData = Util.getListaOrdenMezParams(oParams);
+            var settings = {
+                url: "http://desarrollos.lyrsa.es/XMII/SOAPRunner/MEFRAGSA/Fundicion/Produccion/Ord_Mezcla/TX_lista_orden_mez",
+                httpMethod: "POST",
+                reqParams: reqParamData,
+                successCallback: that._bindAndFilterRetrievedData
+            }
+            that._setGeneralTableBusy();
+            Util.sendSOAPRequest(settings, that);
+
+        },
+
+        //Bind data send from the server and filtered by date.
+        //After binding, filtering has to be performed depending on the materials and resources selected
+        _bindAndFilterRetrievedData: function(controllerInstance, data, textStatus, jqXHR){
+            controllerInstance.bindRetrievedData(controllerInstance, data, textStatus, jqXHR);
+            controllerInstance.onAdvancedFilterLocally();
+        },
+
+        //Filter on memory with the data already retrieved
+        onAdvancedFilterLocally: function(){
+            var oView = this.getView();
+            var oFilterModel = oView.getModel("modadvfilter");
+            var oFilterData = oFilterModel.getData();
+            
+            var mixOrderIDList = this._getOrderIDsFromMaterials(oFilterData.materiales);
             var resourceIDList = oFilterData.recursos;
             var fromDate = oFilterData.fechadesde; 
             var toDate = oFilterData.fechahasta;
@@ -615,10 +700,10 @@ sap.ui.define([
             })];
 
             //fecha
-            if(fromDate && (toDate==="" || fromDate < toDate)){
+            if(fromDate && (toDate==="" || fromDate <= toDate)){
                 dateFilter.push(new Filter("FECHA/#text", FilterOperator.GE, fromDate));
             }
-            if(toDate && toDate>fromDate){
+            if(toDate && toDate >= fromDate){
                 dateFilter.push(new Filter("FECHA/#text", FilterOperator.LE, toDate));
             }
             dateFilter = [new Filter({
@@ -626,9 +711,9 @@ sap.ui.define([
                 and: true
             })];
 
-            if(fromDate > toDate && toDate !== ""){
-                MessageBox.information("La fecha inicial es superior a la final. No se tendrán en cuenta.");
-            }
+            // if(fromDate > toDate && toDate !== ""){
+            //     MessageBox.information("La fecha inicial es superior a la final. No se tendrán en cuenta.");
+            // }
 
 
             //filtro final
@@ -652,10 +737,6 @@ sap.ui.define([
 			var oBinding = oTable.getBinding("items");
             //oBinding.filter(theFilter);
             oBinding.filter(absoluteFilter);
-
-            //Close dialog
-            this.byId("AdvancedFilterDialog").close();
-
         },
 
         onRemoveTableFilters: function(){
