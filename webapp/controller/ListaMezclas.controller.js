@@ -591,6 +591,51 @@ sap.ui.define([
             this.byId("AdvancedFilterDialog").close();
         },
 
+        onFilterDateChange: function(oEvent){
+            var oView = this.getView();
+            var oModel = oView.getModel("modadvfilter");
+            var currentValue = oEvent.getParameter("value");
+            var currentDateModelPath = oEvent.getSource().getBinding("value").getPath();
+            var otherDateModelPath = this._getOtherDatePickerModelPath(currentDateModelPath);
+            var otherValue = oModel.getProperty(otherDateModelPath);
+
+            //if currentValue === "" -> Delete other datepicker (both empty)
+            if(currentValue === ""){
+                oModel.setProperty(otherDateModelPath, "");
+            }else{
+                if(otherValue === ""){
+                    oModel.setProperty(otherDateModelPath, currentValue);
+                }else{
+                    //Both datePickers have values
+                    //Extra verifications to avoid fromDate being higher than toDate
+                    if(currentDateModelPath.indexOf("desde")>-1){
+                        //currentValue -> fromDate
+                        //otherValue -> toDate
+                        if(currentValue > otherValue){
+                            oModel.setProperty(otherDateModelPath, currentValue);
+                        }
+                    }else if(currentDateModelPath.indexOf("hasta")>-1){
+                        //currentValue -> toDate
+                        //otherValue -> fromDate
+                        if(currentValue < otherValue){
+                            oModel.setProperty(otherDateModelPath, currentValue);
+                        }
+                    }
+                }
+            }
+
+            
+        },
+
+        _getOtherDatePickerModelPath: function(modelPath){
+            if(modelPath.indexOf("desde") > -1){
+                modelPath = modelPath.replace("desde", "hasta");
+            }else if(modelPath.indexOf("hasta") > -1){
+                modelPath = modelPath.replace("hasta", "desde");
+            }
+            return modelPath;
+        },
+
         _onMultiBoxFilterSeletion: function(oEvent, modelProperty){
             var selectedItems = oEvent.getParameter("selectedItems");
             var selectedKeys = [];
@@ -799,9 +844,9 @@ sap.ui.define([
             if(resourceFilter[0].aFilters.length > 0){
                 allFiltersList = allFiltersList.concat(resourceFilter);
             }
-            if(dateFilter[0].aFilters.length > 0){
-                allFiltersList = allFiltersList.concat(dateFilter);
-            }
+            // if(dateFilter[0].aFilters.length > 0){
+            //     allFiltersList = allFiltersList.concat(dateFilter);
+            // }
             absoluteFilter = [new Filter({
                 filters: allFiltersList,
                 and: true

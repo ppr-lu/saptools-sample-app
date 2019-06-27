@@ -10,7 +10,7 @@
         <buttons>
             <Button
                 text="Buscar"
-                press="generateAdvancedFilter"/>
+                press="onAdvancedSearch"/>
             <Button
                 text="Restablecer"
                 press="onRemoveGeneralTableFilters"/>
@@ -45,12 +45,14 @@
                 value="{modadvfilter>/fechadesde}"
                 valueFormat="yyyy-MM-dd"
                 displayFormat="dd/MM/yyyy"
+                change="onFilterDateChange"
             />
             <Label text="Fecha Hasta"/>
             <DatePicker
                 value="{modadvfilter>/fechahasta}"
                 valueFormat="yyyy-MM-dd"
                 displayFormat="dd/MM/yyyy"
+                change="onFilterDateChange"
             />
         </VBox>
 	</Dialog>
