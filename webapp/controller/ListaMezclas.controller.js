@@ -873,12 +873,9 @@ sap.ui.define([
             // oModel.refresh();
         },
 
-        onDebugBtn: function(){
-            this.retrieve_mc_materiales();
-            this._initAllMaterialModel();
-            this._addMaterials2AllMaterialModel();
-            this._addProcessesMaterials2AllMaterialModel();
-            this._genAllResourcesModel();
+        onNavToGraphs: function(){
+            var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
+            oRouter.navTo("graphMaster");
         }
 	});
 });

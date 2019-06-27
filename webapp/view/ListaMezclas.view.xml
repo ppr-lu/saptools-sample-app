@@ -102,7 +102,11 @@ height="100%" width="100%">
                             </items>
                         </Table>
                     </ScrollContainer>
-                    <Bar />
+                    <Bar>
+                        <contentLeft>
+                            <Button text="Graphs" press="onNavToGraphs"/>
+                        </contentLeft>
+                    </Bar>
                     <ScrollContainer id="detailsBox" visible="{listConfig>/detailsVisible}"
                         height="{listConfig>/detailSize}" width="100%" horizontal="true" vertical="true" focusable="true">
                         <VBox>

@@ -90,6 +90,11 @@
                 "pattern": "detail/{mixId}",
                 "name": "mixDetail",
                 "target": "mixDetail"
+              },
+              {
+                "pattern": "graph",
+                "name": "graphMaster",
+                "target": "graphMaster"
               }
             ],
             "targets": {
@@ -102,6 +107,10 @@
                 "viewId": "detalleMezcla",
                 "viewName": "DetalleMezcla",
                 "transition": "flip"
+              },
+              "graphMaster": {
+                "viewId": "graphMaster",
+                "viewName": "GraphMaster"
               }
             }
         }
