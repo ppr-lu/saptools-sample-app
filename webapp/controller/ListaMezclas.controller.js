@@ -373,7 +373,10 @@ sap.ui.define([
                 fechadesde: "",
                 fechahasta: "",
                 last_fechadesde: "",
-                last_fechahasta: ""
+                last_fechahasta: "",
+                simpleFilter: [],
+                advFilter: [],
+                simpleSearchText: ""
             }
             oView.setModel(new JSONModel(oData), "modadvfilter");
         },
@@ -418,8 +421,21 @@ sap.ui.define([
         /**
          * Simple Filter (Search)
          */
-		onSearchGeneralMixTable : function (oEvent) {
+        onSimpleSearch: function(oEvent){
             var sQuery = oEvent.getParameter("query");
+            //generates simpleFilter property in modadvfilter model
+            this.generateSimpleFilter(sQuery);
+            //Get a combination of simpleFilter and advFilter.
+            //If we apply simpleFilter dirrctly, we overwrite the advFilter in case
+            //it is already applied to the table
+            var filter = this._mixAllFilters();
+            this._applyFilterToGeneralTable(filter);
+        },
+
+        /**Generates a filter that searchs a string inside any of the properties of a mix order */
+		generateSimpleFilter : function (query) {
+            //var sQuery = oEvent.getParameter("query");
+            var sQuery = query;
             // build filter array
             var aFilter = [
                 new Filter("ORDENCARGA/#text", FilterOperator.Contains, sQuery),
@@ -434,7 +450,8 @@ sap.ui.define([
             ];
 
             //ORDENES_PROCESO
-            var oModel = this.getView().getModel("modjson");
+            var oView = this.getView();
+            var oModel = oView.getModel("modjson");
             var oData = oModel.getProperty("/soap:Envelope/soap:Body/XacuteResponse/Rowset/Row/O_XML_DOCUMENT/OT_ORDENES_MEZCLA/item/");
             if(oData != null && !Array.isArray(oData)){
                 oData = [oData];
@@ -511,6 +528,40 @@ sap.ui.define([
             if(firstElem){
                 oTable.fireSelectionChange({listItem: firstElem});
             } */
+
+            //Save filter
+            oView.getModel("modadvfilter").getData().simpleFilter = theFilter;
+        },
+
+        /**Mix all filters (simple and advanced) into one and return it. */
+        _mixAllFilters: function(andCond){
+            if(andCond === undefined){
+                andCond=true;
+            }
+            var oView = this.getView();
+            var oFilterModel = oView.getModel("modadvfilter");
+            var oFilterData = oFilterModel.getData();
+            var aSimpleFilter = oFilterData.simpleFilter;
+            var aAdvFilter = oFilterData.advFilter;
+            var filterList = [];
+            if(aSimpleFilter.length > 0){
+                filterList = filterList.concat(aSimpleFilter);
+            }
+            if(aAdvFilter.length > 0){
+                filterList = filterList.concat(aAdvFilter);
+            }
+            var combinedFilter = new Filter({
+                filters: filterList,
+                and: andCond
+            });
+            return combinedFilter;
+        },
+
+        /**Apply given filter to the general table */
+        _applyFilterToGeneralTable: function(theFilter){
+            var oTable = this.byId("generalTable");
+            var oBinding = oTable.getBinding("items");
+            oBinding.filter(theFilter);
         },
         
         /**
@@ -590,8 +641,15 @@ sap.ui.define([
             return mixOrderList;
         },
 
+        /**Event handler for advanced search. Generate filter and apply to table. */
+        onAdvancedSearch: function(){
+            this.generateAdvancedFilter();
+            //Close dialog
+            this.byId("AdvancedFilterDialog").close();
+        },
+
         //Decide whether to filter locally or externally
-        onAdvancedFilter: function() {
+        generateAdvancedFilter: function() {
             var oView = this.getView();
             var oFilterModel = oView.getModel("modadvfilter");
             var oFilterData = oFilterModel.getData();
@@ -615,18 +673,27 @@ sap.ui.define([
             oFilterData.last_fechadesde = fechadesde;
             oFilterData.last_fechahasta = fechahasta;
 
+            let promise;
+
             if(isLocalFilter){
-                this.onAdvancedFilterLocally();
+                this.generateAdvancedFilterLocally();
             }else{
-                this.onAdvancedFilterRemotely();
+                promise=this.generateAdvancedFilterRemotely();
             }
 
-            //Close dialog
-            this.byId("AdvancedFilterDialog").close();
+            if(promise){
+                promise.done(function() {
+                    var filter = this._mixAllFilters();
+                    this._applyFilterToGeneralTable(filter);
+                }.bind(this));
+            }else{
+                var filter = this._mixAllFilters();
+                this._applyFilterToGeneralTable(filter);
+            }
         },
 
         //Send a petition to the server with the filters specified. The response will contain the results already filtered.
-        onAdvancedFilterRemotely: function(){
+        generateAdvancedFilterRemotely: function(){
             var oView = this.getView();
             var oFilterModel = oView.getModel("modadvfilter");
             var oFilterData = oFilterModel.getData();
@@ -652,19 +719,20 @@ sap.ui.define([
                 successCallback: that._bindAndFilterRetrievedData
             }
             that._setGeneralTableBusy();
-            Util.sendSOAPRequest(settings, that);
+            var promise = Util.sendSOAPRequest(settings, that);
 
+            return promise;
         },
 
         //Bind data send from the server and filtered by date.
         //After binding, filtering has to be performed depending on the materials and resources selected
         _bindAndFilterRetrievedData: function(controllerInstance, data, textStatus, jqXHR){
             controllerInstance.bindRetrievedData(controllerInstance, data, textStatus, jqXHR);
-            controllerInstance.onAdvancedFilterLocally();
+            controllerInstance.generateAdvancedFilterLocally();
         },
 
         //Filter on memory with the data already retrieved
-        onAdvancedFilterLocally: function(){
+        generateAdvancedFilterLocally: function(){
             var oView = this.getView();
             var oFilterModel = oView.getModel("modadvfilter");
             var oFilterData = oFilterModel.getData();
@@ -674,7 +742,6 @@ sap.ui.define([
             var fromDate = oFilterData.fechadesde; 
             var toDate = oFilterData.fechahasta;
 
-            //generateFiltersFor()...
             var materialFilter = [];
             var resourceFilter = [];
             var dateFilter = [];
@@ -684,6 +751,11 @@ sap.ui.define([
             //materiales
             for(var i=0;i<mixOrderIDList.length;i++){
                 materialFilter.push(new Filter("ORDENCARGA/#text", FilterOperator.EQ, mixOrderIDList[i]));
+            }
+            //If no orders with the specified materials are found, at least enter a non-matchable string so that no
+            //order appears on the list.
+            if(oFilterData.materiales.length > 0 && materialFilter.length === 0){
+                materialFilter.push(new Filter("ORDENCARGA/#text", FilterOperator.EQ, "thisstringmatchesnoid"));
             }
             materialFilter = [new Filter({
                 filters: materialFilter,
@@ -699,21 +771,24 @@ sap.ui.define([
                 and: false
             })];
 
-            //fecha
-            if(fromDate && (toDate==="" || fromDate <= toDate)){
-                dateFilter.push(new Filter("FECHA/#text", FilterOperator.GE, fromDate));
-            }
-            if(toDate && toDate >= fromDate){
-                dateFilter.push(new Filter("FECHA/#text", FilterOperator.LE, toDate));
-            }
-            dateFilter = [new Filter({
-                filters: dateFilter,
-                and: true
-            })];
+            //Already filtered by generateAdvancedFilterRemotely(), which is executed everytime the dates
+            //specified by the user change, so filtering dates here is pointless
 
-            // if(fromDate > toDate && toDate !== ""){
-            //     MessageBox.information("La fecha inicial es superior a la final. No se tendrán en cuenta.");
+            // //fecha
+            // if(fromDate && (toDate==="" || fromDate <= toDate)){
+            //     dateFilter.push(new Filter("FECHA/#text", FilterOperator.GE, fromDate));
             // }
+            // if(toDate && toDate >= fromDate){
+            //     dateFilter.push(new Filter("FECHA/#text", FilterOperator.LE, toDate));
+            // }
+            // dateFilter = [new Filter({
+            //     filters: dateFilter,
+            //     and: true
+            // })];
+
+            // // if(fromDate > toDate && toDate !== ""){
+            // //     MessageBox.information("La fecha inicial es superior a la final. No se tendrán en cuenta.");
+            // // }
 
 
             //filtro final
@@ -732,16 +807,14 @@ sap.ui.define([
                 and: true
             })];
 
-			// filter binding
-			var oTable = this.byId("generalTable");
-			var oBinding = oTable.getBinding("items");
-            //oBinding.filter(theFilter);
-            oBinding.filter(absoluteFilter);
+            //Save filter
+            oView.getModel("modadvfilter").getData().advFilter = absoluteFilter;
         },
 
-        onRemoveTableFilters: function(){
+        //Remove all filters applied to the general table
+        onRemoveGeneralTableFilters: function(){
             //reset data in the model
-            this._initAdvFilterModel()
+            this._initAdvFilterModel();
             //Clear ComboBoxes
             this.byId("materialFilterCombo").setSelectedItems(null);
             this.byId("resourceFilterCombo").setSelectedItems(null);
@@ -749,6 +822,10 @@ sap.ui.define([
             var oTable = this.byId("generalTable");
             var oBinding = oTable.getBinding("items");
             oBinding.filter([]);
+            //refresh model so search text area now figures empty. Not really needed
+            // var oView = this.getView();
+            // var oModel = oView.getModel("modadvfilter");
+            // oModel.refresh();
         },
 
         onDebugBtn: function(){

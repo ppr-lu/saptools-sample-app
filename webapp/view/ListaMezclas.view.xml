@@ -30,7 +30,7 @@ height="100%" width="100%">
                                     <content>
                                         <Title text="Ordenes Mezcla" level="H2"/>
                                         <ToolbarSpacer/>
-                                        <SearchField width="50%" search="onSearchGeneralMixTable"/>
+                                        <SearchField value="{modadvfilter>/simpleSearchText}" width="50%" search="onSimpleSearch"/>
                                         <Button icon="sap-icon://filter" press="onOpenFilterDialog"/>
                                         <Button text="Refresh" icon="sap-icon://refresh" press="onRetrieveListaOrdenMezcla"/>
                                     </content>

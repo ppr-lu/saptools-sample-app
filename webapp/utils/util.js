@@ -173,6 +173,8 @@ sap.ui.define([
          *      Through it, the view associated to the controller can be obtained and the data can be stored inside a model, or a busy indicator can be set
          * 
          * The controller instance may also be needed by the successCallback if the retrieved data wants to be stored in a view model
+         * 
+         * RETURNS THE AJAX PROMISE
          */
         sendSOAPRequest: function(oSettings, controllerInstance){
 
@@ -229,7 +231,7 @@ sap.ui.define([
             }
 
             //Send request with recived settings
-            $.ajax({
+            var jqueryPromise = $.ajax({
                 url: oSettings.url,
                 method: oSettings.httpMethod,
                 dataType: "xml",
@@ -240,6 +242,8 @@ sap.ui.define([
                 error: function(oError){oSettings.errorCallback(controllerInstance, oError);},
                 complete: function(jqXHR, textStatus){oSettings.completeCallback(controllerInstance, jqXHR, textStatus);}
             });
+
+            return jqueryPromise;
         },
 
         getResourcesKeyValue: function(){

@@ -10,10 +10,10 @@
         <buttons>
             <Button
                 text="Buscar"
-                press="onAdvancedFilter"/>
+                press="generateAdvancedFilter"/>
             <Button
                 text="Restablecer"
-                press="onRemoveTableFilters"/>
+                press="onRemoveGeneralTableFilters"/>
             <Button
                 text="Cerrar"
                 press="onCloseFilterDialog"/>
