@@ -31,19 +31,25 @@ sap.ui.define([
 			}
         },
 
+        onRetrieveGraphData: function(oEvent){
+            this.retrieveGraphData();
+        },
+
         retrieveGraphData: function(params){
             var that = this;
             if(params === undefined){
-                params = Util.getMasterGraphParams();
+                //params = Util.getMasterGraphParams();
+                params = Util.getDetailGraphParams({id_grafica: "41"});
             }
             var settings = {
-                url: "http://desarrollos.lyrsa.es/XMII/SOAPRunner/MEFRAGSA/Fundicion/Produccion/Ord_Mezcla/TX_LISTADO_PAGINAS",
+                //url: "http://desarrollos.lyrsa.es/XMII/SOAPRunner/MEFRAGSA/Fundicion/Produccion/Ord_Mezcla/TX_LISTADO_PAGINAS",
+                url: "http://desarrollos.lyrsa.es/XMII/SOAPRunner/MEFRAGSA/Fundicion/Pantallas/Graficas/TX_GET_GRAFICA",
                 httpMethod: "POST",
                 reqParams: params,
                 successCallback: that.bindRetrievedData
                 //completeCallback: that._unsetGeneralTableBusy //Busyness is unset inside bindRetrieveData
             }
-            that._setGeneralTableBusy();
+            //that._setGeneralTableBusy();
             Util.sendSOAPRequest(settings, that);  
         },
 
@@ -53,10 +59,12 @@ sap.ui.define([
             
             var oDataXML = Util.unescapeXML(data)
             var oDataJSON = Util.xmlToJson(oDataXML);
-            controllerInstance._fixGeneralData(oDataJSON);
+            //Remove unneeded path prefix
+            oDataJSON = oDataJSON["soap:Envelope"]["soap:Body"].XacuteResponse.Rowset.Row.O_GRAFICA.GRAFICA;
+            //PUNTOS: GRAFICA.TITULOS.TITULO[0].VARIABLES.VARIABLE[0].PUNTOS
             var oJSONModel = new JSONModel(oDataJSON);
 
-            //oView.setModel(oJSONModel, "modmultigraph");
+            oView.setModel(oJSONModel, "modmastergraph");
         },
 	});
 });

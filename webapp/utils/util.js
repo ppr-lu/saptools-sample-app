@@ -64,6 +64,7 @@ sap.ui.define([
             sXML = sXML.replace(/&apos;/g, "'");
             sXML = sXML.replace(/&lt;/g, "<");
             sXML = sXML.replace(/&gt;/g, ">");
+            sXML = sXML.replace(/&#13;/g,"");
 
             oXML = new DOMParser().parseFromString(sXML, "text/xml");
             return oXML;
@@ -159,6 +160,37 @@ sap.ui.define([
 
             return sReq;
         },
+
+        getMasterGraphParams(oSettings){
+            if(!this._isObject(oSettings)){
+                oSettings={};
+            }
+            if(oSettings.tipo === undefined){
+                oSettings.tipo = "G";
+            }
+            var sReq = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\
+            <soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" \
+            xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"  xmlns:s0=\"http://www.sap.com/xMII\">\
+            <soap:Body><s0:XacuteRequest><s0:InputParams xmlns:s0=\"http://www.sap.com/xMII\" xmlns=\"http://www.sap.com/xMII\">\
+            <s0:I_TIPO>"+String(oSettings.tipo)+"</s0:I_TIPO>\
+            </s0:InputParams></s0:XacuteRequest></soap:Body></soap:Envelope>";
+
+            return sReq;
+        },
+
+        getDetailGraphParams: function(oSettings){
+            if(!this._isObject(oSettings)){
+                oSettings={};
+            }
+            if(oSettings.id_grafica === undefined){
+                oSettings.id_grafica = "1";
+            }
+            var sReq = "<?xml version=\"1.0\" encoding=\"utf-8\"?><soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"  xmlns:s0=\"http://www.sap.com/xMII\"><soap:Body><s0:XacuteRequest><s0:InputParams xmlns:s0=\"http://www.sap.com/xMII\" xmlns=\"http://www.sap.com/xMII\"><s0:ID_GRAFICA>"+String(oSettings.id_grafica)+"</s0:ID_GRAFICA></s0:InputParams></s0:XacuteRequest></soap:Body></soap:Envelope>";
+
+            return sReq;
+        },
+
+        
 
         /**
          * The object given as argument should posses the following fields:
