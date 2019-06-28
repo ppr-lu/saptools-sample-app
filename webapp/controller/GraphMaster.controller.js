@@ -61,10 +61,19 @@ sap.ui.define([
             var oDataJSON = Util.xmlToJson(oDataXML);
             //Remove unneeded path prefix
             oDataJSON = oDataJSON["soap:Envelope"]["soap:Body"].XacuteResponse.Rowset.Row.O_GRAFICA.GRAFICA;
+            oDataJSON = controllerInstance._turn2RealDates(oDataJSON);
             //PUNTOS: GRAFICA.TITULOS.TITULO[0].VARIABLES.VARIABLE[0].PUNTOS
             var oJSONModel = new JSONModel(oDataJSON);
 
             oView.setModel(oJSONModel, "modmastergraph");
         },
+
+        _turn2RealDates: function(oData){
+            var aPoints = oData.TITULOS.TITULO.VARIABLES.VARIABLE.PUNTOS.puntos;
+            for(var pt of aPoints){
+                pt.FECHA_TAG["#text"] = new Date(pt.FECHA_TAG["#text"]);
+            }
+            return oData;
+        }
 	});
 });

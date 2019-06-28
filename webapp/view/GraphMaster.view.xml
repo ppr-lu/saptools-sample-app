@@ -21,7 +21,7 @@ controllerName="simple-app.controller.GraphMaster">
                             <chart:content>
 
                                 <viz:VizFrame id="idpiechart" width="auto"
-                                    uiConfig="{applicationSet:'fiori'}" vizType="line"
+                                    uiConfig="{applicationSet:'fiori'}" vizType="timeseries_line"
                                     vizProperties="{
                                         plotArea:{
                                                             dataLabel:{visible: true}
@@ -35,7 +35,7 @@ controllerName="simple-app.controller.GraphMaster">
                                     <viz:dataset>
                                     <viz.data:FlattenedDataset id="flattenData" data="{modmastergraph>/TITULOS/TITULO/VARIABLES/VARIABLE/PUNTOS/puntos/}">
                                         <viz.data:dimensions>
-                                            <viz.data:DimensionDefinition name="Date" value="{modmastergraph>FECHA_TAG/#text}"/>
+                                            <viz.data:DimensionDefinition name="Date" value="{modmastergraph>FECHA_TAG/#text}" dataType="date"/>
                                         </viz.data:dimensions>
                                         <viz.data:measures>
                                             <viz.data:MeasureDefinition name="Sales" value="{modmastergraph>VALOR/#text}" />
@@ -45,7 +45,8 @@ controllerName="simple-app.controller.GraphMaster">
                                         
                                     <viz:feeds>
                                         <viz.feeds:FeedItem uid="valueAxis" type="Measure" values="Sales" />
-                                        <viz.feeds:FeedItem uid="categoryAxis" type="Dimension" values="Date" />
+                                        <!-- <viz.feeds:FeedItem uid="categoryAxis" type="Dimension" values="Date" /> -->
+                                        <viz.feeds:FeedItem uid="timeAxis" type="Dimension" values="Date" />
                                     </viz:feeds>
                                 </viz:VizFrame>
 
