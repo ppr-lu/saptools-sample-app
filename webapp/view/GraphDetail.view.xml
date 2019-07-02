@@ -13,18 +13,8 @@ controllerName="simple-app.controller.GraphMaster">
                         <Button text="SOAP" press="onRetrieveGraphData"/>
                     </VBox>
 
-                    <Label text="---------"/>
-
-                    <layout:Grid
-                    id="GraphContainer"
-					containerQuery="true"
-					defaultSpan="XL2 L4">
-                        
 
 
-                    </layout:Grid>
-
-                    <Label text="---------"/>
 
                     <chart:ChartContainer  showFullScreen="true" showZoom="false" title="Ice-Cream-Report">
                         <chart:ChartContainerContent>
