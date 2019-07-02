@@ -200,6 +200,36 @@ sap.ui.define([
             Util.sendSOAPRequest(settings, that);  
         },
 
+        /**New function for testing. Cant retrieve data from Odataservice running on MI.
+         * Since MI runs SOAP, all request have to contain an xml in its body with the request parameters.
+         * When instantiating an oDataModel, it automatically sends a request to retrieve the metadata. 
+         * To do that, appends "/$metadata" at then end of the service url. No payload can be send with said request, so
+         * it can be considered as valid by the server.
+         */
+        onRetrieveListaOrdenMezclaOData: function(){
+            var oModel = new sap.ui.model.odata.v2.ODataModel("http://desarrollos.lyrsa.es/XMII/SOAPRunner/Prueba_SAPTOOLS/AMONDEJAR/XQ_lista_orden_mez_odata",{
+                json: false,
+
+            });
+            oModel.attachMetadataFailed({},function(a,b,c){
+                console.log("success");
+                console.log("a:", a);
+                console.log("b:", b);
+                console.log("c:");
+                console.log(c);
+            }, this);
+
+            oModel.attachMetadataFailed({},function(a,b,c){
+                console.log("failure");
+                console.log("a:", a);
+                console.log("b:", b);
+                console.log("c:");
+                console.log(c);
+            }, this);
+
+            oModel.read("/", {success: function(data){console.log("read success!", data)}, error: function(error){console.log("read failure")}});
+        },
+
         /* PREVIOUSonRetrieveListaOrdenMezcla: function(oEvent){
             var that = this;
             var url = "http://desarrollos.lyrsa.es/XMII/SOAPRunner/MEFRAGSA/Fundicion/Produccion/Ord_Mezcla/TX_lista_orden_mez";
