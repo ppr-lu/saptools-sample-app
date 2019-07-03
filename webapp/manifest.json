@@ -95,6 +95,11 @@
                 "pattern": "graph",
                 "name": "graphMaster",
                 "target": "graphMaster"
+              },
+              {
+                "pattern": "graphDetail/{graphId}",
+                "name": "graphDetail",
+                "target": "graphDetail"
               }
             ],
             "targets": {
@@ -111,6 +116,10 @@
               "graphMaster": {
                 "viewId": "graphMaster",
                 "viewName": "GraphMaster"
+              },
+              "graphDetail": {
+                "viewId": "graphDetail",
+                "viewName": "GraphDetail"
               }
             }
         }

@@ -19,9 +19,19 @@ sap.ui.define([
         formatPatter: ChartFormatter.DefaultPattern,
         
         onInit: function(){
-            console.log("onInit graph");
+            console.log("onInit graphDetail");
+
+            var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
+			oRouter.getRoute("graphDetail").attachPatternMatched(this._onObjectMatched, this);
 
         },
+
+        _onObjectMatched: function (oEvent) {
+            var graphId = oEvent.getParameter("arguments").graphId;
+            console.log("graph id:"  + graphId);
+
+            this.retrieveGraphData(graphId);
+		},
         
         onNavBack: function(){
             var oHistory = History.getInstance();
@@ -31,42 +41,18 @@ sap.ui.define([
 				window.history.go(-1);
 			} else {
 				var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
-				oRouter.navTo("mixList", {}, true);
+				oRouter.navTo("graphMaster", {}, true);
 			}
         },
 
         onRetrieveGraphData: function(oEvent){
-            //this.retrieveGraphData();
-            this.testGeneralData();
+            this.retrieveGraphData(graphId);
         },
 
-        testGeneralData: function(params){
+        retrieveGraphData: function(graphId){
             var that = this;
-            if(params === undefined){
-                params = Util.getMasterGraphParams();
-                //params = Util.getDetailGraphParams({id_grafica: "41"});
-            }
+            var params = Util.getDetailGraphParams({id_grafica: graphId});
             var settings = {
-                
-                url: "http://desarrollos.lyrsa.es/XMII/SOAPRunner/MEFRAGSA/Fundicion/Pantallas/TX_LISTADO_PAGINAS",
-                //url: "http://desarrollos.lyrsa.es/XMII/SOAPRunner/MEFRAGSA/Fundicion/Pantallas/Graficas/TX_GET_GRAFICA",
-                httpMethod: "POST",
-                reqParams: params,
-                successCallback: that.bindRetrievedData,
-                //completeCallback: function(){},
-                //errorCallback: function(){}
-            }
-            Util.sendSOAPRequest(settings, that);
-        },
-
-        retrieveGraphData: function(params){
-            var that = this;
-            if(params === undefined){
-                //params = Util.getMasterGraphParams();
-                params = Util.getDetailGraphParams({id_grafica: "41"});
-            }
-            var settings = {
-                //url: "http://desarrollos.lyrsa.es/XMII/SOAPRunner/MEFRAGSA/Fundicion/Produccion/Ord_Mezcla/TX_LISTADO_PAGINAS",
                 url: "http://desarrollos.lyrsa.es/XMII/SOAPRunner/MEFRAGSA/Fundicion/Pantallas/Graficas/TX_GET_GRAFICA",
                 httpMethod: "POST",
                 reqParams: params,
@@ -74,7 +60,7 @@ sap.ui.define([
                 completeCallback: function(){},
                 errorCallback: function(){}
             }
-            //that._setGeneralTableBusy();
+
             Util.sendSOAPRequest(settings, that);  
         },
 
@@ -85,19 +71,19 @@ sap.ui.define([
             var oDataXML = Util.unescapeXML(data)
             var oDataJSON = Util.xmlToJson(oDataXML);
             //Remove unneeded path prefix
-            oDataJSON = oDataJSON["soap:Envelope"]["soap:Body"].XacuteResponse.Rowset.Row.O_GRAFICAS.GRUPOS; //Master
-            //oDataJSON = oDataJSON["soap:Envelope"]["soap:Body"].XacuteResponse.Rowset.Row.O_GRAFICA.GRAFICA; //Detail
+            oDataJSON = oDataJSON["soap:Envelope"]["soap:Body"].XacuteResponse.Rowset.Row.O_GRAFICA.GRAFICA; //Detail
             //oDataJSON = controllerInstance._turn2RealDates(oDataJSON);
             //PUNTOS: GRAFICA.TITULOS.TITULO[0].VARIABLES.VARIABLE[0].PUNTOS
             var oJSONModel = new JSONModel(oDataJSON);
 
-            oView.setModel(oJSONModel, "modmastergraph");
+            oView.setModel(oJSONModel, "moddetailgraph");
 
-            controllerInstance._genModifiedGraphData();
-            controllerInstance.genVizChartsFromGraphData("FECHA_TAG", "VALOR");
+            //controllerInstance._genModifiedGraphData();
+            //controllerInstance.genVizChartFromGraphData("FECHA_TAG", "VALOR");
             
         },
 
+        /**Modifiy retrieved model so that point properties are parsed to proper data type */
         _turn2RealDates: function(oData){
             var aPoints = oData.TITULOS.TITULO.VARIABLES.VARIABLE.PUNTOS.puntos;
             for(var pt of aPoints){
@@ -107,7 +93,7 @@ sap.ui.define([
             return oData;
         },
 
-        /**
+        /**2BEUPDATED
          * Receive the x and y labels the original graph data has for its points.
          * 
          * Modifies the original graph data to store data in a different way so that it can
@@ -122,7 +108,7 @@ sap.ui.define([
                 yLabel = "VALOR";
             }
             var oView = this.getView();
-            var oOriginalModel = oView.getModel("modmastergraph");
+            var oOriginalModel = oView.getModel("moddetailgraph");
             var oOriginalData = oOriginalModel.getData();
 
             var oCopiedData = JSON.parse( JSON.stringify(oOriginalData) );
@@ -182,10 +168,11 @@ sap.ui.define([
             oView.setModel(new JSONModel(oNewData), "modmodifiedmastergraph");
         },
 
-        /**From the modified data of the graphs, generate needed data to create them and
+        /**2BEUPDATED
+         * From the modified data of the graphs, generate needed data to create them and
          * call the function that draws them.
          */
-        genVizChartsFromGraphData: function(xLabel, yLabel, container){
+        genVizChartFromGraphData: function(xLabel, yLabel, container){
             container = container || "GraphContainer";
             xLabel = xLabel || "FECHA_TAG";
             yLabel = yLabel || "VALOR";
@@ -328,15 +315,6 @@ sap.ui.define([
             var oTooltip = new sap.viz.ui5.controls.VizTooltip({});
             oTooltip.connect(oVizFrame.getVizUid());
             //oTooltip.setFormatString(ChartFormatter.DefaultPattern.STANDARDFLOAT);
-        },
-
-        //TEST
-        onNavToGraphDetail: function(oEvent){
-            console.log("NAV!");
-            var graphId = "TEST";
-
-            var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
-            oRouter.navTo("graphDetail", {graphId: graphId});
         },
 
 	});

@@ -10,6 +10,7 @@ controllerName="simple-app.controller.GraphMaster">
 				<content>
                     <VBox>
 				        <Text text="Simple app" />
+                        <Button text="GENERIC DETAIL" press="onNavToGraphDetail"/>
                         <Button text="SOAP" press="onRetrieveGraphData"/>
                     </VBox>
 
