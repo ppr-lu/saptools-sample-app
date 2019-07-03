@@ -1,15 +1,13 @@
 sap.ui.define([
     "sap/ui/core/mvc/Controller",
     "sap/ui/model/json/JSONModel",
-    "sap/ui/model/Filter",
-    "sap/ui/model/FilterOperator",
-    "sap/ui/unified/Calendar",
     "sap/m/MessageBox",
     "sap/ui/core/routing/History",
     "sap/viz/ui5/format/ChartFormatter",
+    "sap/viz/ui5/data/FlattenedDataset",
     "simple-app/utils/util",
     "simple-app/utils/formatter",
-], function(Controller, JSONModel, Filter, FilterOperator, Calendar, MessageBox, History, ChartFormatter, Util, Formatter) {
+], function(Controller, JSONModel, MessageBox, History, ChartFormatter, FlattenedDataset, Util, Formatter) {
 	"use strict";
 
 	return Controller.extend("simple-app.controller.GraphMaster", {
@@ -172,10 +170,9 @@ sap.ui.define([
                             newGrp.TRAZAS[pt_ix] = {};
                             //newGrp.TRAZAS[pt_ix]["ETIQUETA_EJEX"] = currentPnt[xLabel];
                             newGrp.TRAZAS[pt_ix][xLabel] = currentPnt[xLabel]["#text"];
-                            newGrp.TRAZAS[pt_ix][currentYLabel] = currentPnt[yLabel]["#text"];
-                        }else{
-                            newGrp.TRAZAS[pt_ix][currentYLabel] = currentPnt[yLabel]["#text"];
                         }
+                        newGrp.TRAZAS[pt_ix][currentYLabel] = parseFloat(currentPnt[yLabel]["#text"]).toFixed(3) || currentPnt[yLabel]["#text"];
+                        
                     }
                 }
                 oNewData.GRAPHS.push(newGrp);
@@ -236,9 +233,10 @@ sap.ui.define([
                 }
             };
 
-            var oDataset = new sap.viz.core.FlattenedDataset(oSettings);
+            var oDataset = new FlattenedDataset(oSettings);
 
-            var oChart = new sap.viz.ui5.Line(
+            //var oChart = new sap.viz.ui5.Line(
+            var oChart = new sap.viz.ui5.Area(
                 //"idChar1", 
                 {
                     width : "80%",
@@ -256,9 +254,12 @@ sap.ui.define([
                 }
             );
 
+            var vbox = new sap.m.VBox();
+            vbox.addItem(oChart);    
+            vbox.addItem(new sap.m.Button({text: "DETALLE"}));   
             var container = this.byId(containerId);
             if(container){
-                container.addContent(oChart);
+                container.addContent(vbox);
             }
         },
 
