@@ -19,36 +19,54 @@ controllerName="simple-app.controller.GraphDetail">
                     <chart:ChartContainer  showFullScreen="true" showZoom="false" title="Ice-Cream-Report">
                         <chart:ChartContainerContent>
                             <chart:content>
-                                <viz:Popover ></viz:Popover>
                                 <viz:VizFrame  id="vizFrame1" width="auto"
                                     uiConfig="{applicationSet:'fiori'}" vizType="timeseries_line"
                                     vizProperties="{
                                         plotArea:{
-                                                    dataLabel:{visible: true}
-                                        },
-                                        title : {text:'Flavor-Sales'}
+                                            dataLabel: {
+                                                visible: false
+                                            }
+                                        }
                                     }"
                                     selectData="myOnClickHandler" 
-                                    noDataText="Go make a Sale!"
+                                    noDataText="No Data"
                                     renderComplete="handleRenderComplete"
                                 >
                                     <viz:dataset>
-                                    <viz.data:FlattenedDataset  data="{modmastergraph>/TITULOS/TITULO/VARIABLES/VARIABLE/PUNTOS/puntos/}">
+                                    <viz.data:FlattenedDataset  data="{moddetailgraph>/TITULOS/TITULO/VARIABLES/VARIABLE/PUNTOS/puntos/}">
                                         <viz.data:dimensions>
-                                            <viz.data:DimensionDefinition name="Date" value="{modmastergraph>FECHA_TAG}" dataType="date"/>
+                                            <viz.data:DimensionDefinition name="Date" value="{moddetailgraph>FECHA_TAG}" dataType="date"/>
                                         </viz.data:dimensions>
                                         <viz.data:measures>
-                                            <viz.data:MeasureDefinition name="Sales" value="{modmastergraph>VALOR}" />
+                                            <viz.data:MeasureDefinition name="Data" value="{moddetailgraph>VALOR}" />
                                         </viz.data:measures>
                                     </viz.data:FlattenedDataset>
                                     </viz:dataset>
                                         
                                     <viz:feeds>
-                                        <viz.feeds:FeedItem uid="valueAxis" type="Measure" values="Sales" />
-                                        <!-- <viz.feeds:FeedItem uid="categoryAxis" type="Dimension" values="Date" /> -->
+                                        <viz.feeds:FeedItem uid="valueAxis" type="Measure" values="Data" />
                                         <viz.feeds:FeedItem uid="timeAxis" type="Dimension" values="Date" />
                                     </viz:feeds>
                                 </viz:VizFrame>
+
+                                <viz:VizSlider id="idVizSlider" uiConfig="{applicationSet:'fiori'}"
+                                    height='100%' width="100%" vizType='timeseries_column'>
+                                    <viz:dataset>
+                                    <viz.data:FlattenedDataset  data="{moddetailgraph>/TITULOS/TITULO/VARIABLES/VARIABLE/PUNTOS/puntos/}">
+                                        <viz.data:dimensions>
+                                            <viz.data:DimensionDefinition name="Date" value="{moddetailgraph>FECHA_TAG}" dataType="date"/>
+                                        </viz.data:dimensions>
+                                        <viz.data:measures>
+                                            <viz.data:MeasureDefinition name="Data" value="{moddetailgraph>VALOR}" />
+                                        </viz.data:measures>
+                                    </viz.data:FlattenedDataset>
+                                    </viz:dataset>
+
+                                     <viz:feeds>
+                                        <viz.feeds:FeedItem uid="valueAxis" type="Measure" values="Data" />
+                                        <viz.feeds:FeedItem uid="timeAxis" type="Dimension" values="Date" />
+                                    </viz:feeds>
+                                </viz:VizSlider>
 
                             </chart:content>
                         </chart:ChartContainerContent>
@@ -62,7 +80,7 @@ controllerName="simple-app.controller.GraphDetail">
 
 
 
-                    <layout:FixFlex id='chartFixFlex2' minFlexSize="250">
+                    <!-- <layout:FixFlex id='chartFixFlex2' minFlexSize="250">
                         <layout:fixContent>
                             <Panel id='settingsPanel2' class="panelStyle" expandable="true" expanded="true" headerText="Settings" width="auto">
                                 <content>
@@ -116,7 +134,7 @@ controllerName="simple-app.controller.GraphDetail">
                                 </viz:feeds>
                             </viz:VizFrame>
                         </layout:flexContent>
-                    </layout:FixFlex>
+                    </layout:FixFlex> -->
 
 
                     <!-- <Title text="Ordenes Mezcla" level="H2"/> -->

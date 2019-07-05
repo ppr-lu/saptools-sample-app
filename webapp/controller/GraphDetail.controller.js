@@ -72,25 +72,28 @@ sap.ui.define([
             var oDataJSON = Util.xmlToJson(oDataXML);
             //Remove unneeded path prefix
             oDataJSON = oDataJSON["soap:Envelope"]["soap:Body"].XacuteResponse.Rowset.Row.O_GRAFICA.GRAFICA; //Detail
-            //oDataJSON = controllerInstance._turn2RealDates(oDataJSON);
-            //PUNTOS: GRAFICA.TITULOS.TITULO[0].VARIABLES.VARIABLE[0].PUNTOS
+            controllerInstance._parseTraceData(oDataJSON);
             var oJSONModel = new JSONModel(oDataJSON);
 
             oView.setModel(oJSONModel, "moddetailgraph");
-
             //controllerInstance._genModifiedGraphData();
             //controllerInstance.genVizChartFromGraphData("FECHA_TAG", "VALOR");
             
         },
 
-        /**Modifiy retrieved model so that point properties are parsed to proper data type */
-        _turn2RealDates: function(oData){
+        /**Modifiy retrieved model so that trace properties are parsed to proper data type */
+        _parseTraceData: function(oData){
             var aPoints = oData.TITULOS.TITULO.VARIABLES.VARIABLE.PUNTOS.puntos;
             for(var pt of aPoints){
-                pt.VALOR = parseFloat(pt.VALOR["#text"]);
-                pt.FECHA_TAG = new Date(pt.FECHA_TAG["#text"]);
+                pt.VALOR = parseFloat(pt.VALOR["#text"]) || pt.VALOR["#text"];
+                pt.FECHA_TAG = new Date(pt.FECHA_TAG["#text"]) || pt.FECHA_TAG["#text"];
             }
             return oData;
+        },
+
+        _onGraphRenderComplete: function(oEvent){
+            debugger;
+            this._addTooltip2VizFrame(oEvent.getSource());
         },
 
         /**2BEUPDATED
@@ -311,7 +314,7 @@ sap.ui.define([
 
         _addTooltip2VizFrame: function(oVizFrame){
             //Config tooltip
-            var oVizFrame = controllerInstance.getView().byId("vizFrame2");
+            //var oVizFrame = controllerInstance.getView().byId("vizFrame2");
             var oTooltip = new sap.viz.ui5.controls.VizTooltip({});
             oTooltip.connect(oVizFrame.getVizUid());
             //oTooltip.setFormatString(ChartFormatter.DefaultPattern.STANDARDFLOAT);
