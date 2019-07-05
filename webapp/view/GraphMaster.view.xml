@@ -8,24 +8,22 @@ controllerName="simple-app.controller.GraphMaster">
 		<pages>
 			<Page title="{i18n>GraphMasterPageTitle}" enableScrolling="true" showNavButton="true" navButtonPress="onNavBack">
 				<content>
-                    <VBox>
+                    <!-- <VBox>
 				        <Text text="Simple app" />
                         <Button text="GENERIC DETAIL" press="onNavToGraphDetail"/>
-                        <Button text="SOAP" press="onRetrieveGraphData"/>
-                    </VBox>
+                        <Button text="SOAP" press="onRetrieveGeneralGraphsData"/>
+                    </VBox> -->
 
-                    <Label text="---------"/>
-
-                    <layout:Grid
-                    id="GraphContainer"
+                    <!-- <layout:Grid
+                    id="GraphContainerOld"
 					containerQuery="true"
 					defaultSpan="XL2 L4">
-                        
+                    </layout:Grid> -->
 
+                    <VBox
+                    id="GraphContainer">
 
-                    </layout:Grid>
-
-                    <Label text="---------"/>
+                    </VBox>
 
                     <!-- <Title text="Ordenes Mezcla" level="H2"/> -->
 				</content>

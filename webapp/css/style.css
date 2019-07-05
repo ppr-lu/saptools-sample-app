@@ -62,3 +62,12 @@
 .mediumColumn {
     width: 12em;
 }
+
+.myCustomTitle {
+    font-size: 30px;
+    /* color: #1d1dd3; */
+    color: #114400;
+    display: inline-block;
+    border-block-end: solid 10px;
+    border-color: #114400;
+}
