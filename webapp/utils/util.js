@@ -241,24 +241,24 @@ sap.ui.define([
             }
             if(oSettings.errorCallback === undefined){
                 oSettings.errorCallback = function(controllerInstance, oError){
-                    console.log("You have not specified a error callback function");
-                    console.log("> Params");
-                    console.log(">> controllerInstance:");
-                    console.log(controllerInstance);
-                    console.log(">> oError:");
-                    console.log(oError);
+                    // console.log("You have not specified a error callback function");
+                    // console.log("> Params");
+                    // console.log(">> controllerInstance:");
+                    // console.log(controllerInstance);
+                    // console.log(">> oError:");
+                    // console.log(oError);
                 };
             }
             if(oSettings.completeCallback === undefined){
                 oSettings.completeCallback = function(controllerInstance, jqXHR, textStatus){
-                    console.log("You have not specified a complete callback function");
-                    console.log("> Params");
-                    console.log(">> controllerInstance:");
-                    console.log(controllerInstance);
-                    console.log(">> jqXHR:");
-                    console.log(jqXHR);
-                    console.log(">> textStatus:");
-                    console.log(textStatus);
+                    // console.log("You have not specified a complete callback function");
+                    // console.log("> Params");
+                    // console.log(">> controllerInstance:");
+                    // console.log(controllerInstance);
+                    // console.log(">> jqXHR:");
+                    // console.log(jqXHR);
+                    // console.log(">> textStatus:");
+                    // console.log(textStatus);
                 };
             }
 

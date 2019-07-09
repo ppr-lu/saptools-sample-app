@@ -15,6 +15,12 @@ height="100%" width="100%">
                         <Button text="Debug" press="onDebugBtn"/>
                     </VBox>-->
                     <!-- <Title text="Ordenes Mezcla" level="H2"/> -->
+                    <Bar>
+                        <contentLeft>
+                            <Button text="Graphs" press="onNavToGraphs"/>
+                            <Button text="Echart" press="onNavToEchart"/>
+                        </contentLeft>
+                    </Bar>
                     <ScrollContainer id="cajaScroll" height="{listConfig>/currentMainSize}" 
                         width="100%" horizontal="true" vertical="true" focusable="true">
                         <Table 
@@ -102,9 +108,9 @@ height="100%" width="100%">
                         </Table>
                     </ScrollContainer>
                     <Bar>
-                        <contentLeft>
+                        <!-- <contentLeft>
                             <Button text="Graphs" press="onNavToGraphs"/>
-                        </contentLeft>
+                        </contentLeft> -->
                     </Bar>
                     <ScrollContainer id="detailsBox" visible="{listConfig>/detailsVisible}"
                         height="{listConfig>/detailSize}" width="100%" horizontal="true" vertical="true" focusable="true">

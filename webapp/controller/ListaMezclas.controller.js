@@ -906,6 +906,10 @@ sap.ui.define([
         onNavToGraphs: function(){
             var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
             oRouter.navTo("graphMaster");
+        },
+        onNavToEchart: function(){
+            var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
+            oRouter.navTo("graphEcharts");
         }
 	});
 });

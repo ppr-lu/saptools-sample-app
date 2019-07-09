@@ -100,6 +100,11 @@
                 "pattern": "graphDetail/{graphId}",
                 "name": "graphDetail",
                 "target": "graphDetail"
+              },
+              {
+                "pattern": "graphEcharts",
+                "name": "graphEcharts",
+                "target": "graphEcharts"
               }
             ],
             "targets": {
@@ -120,6 +125,10 @@
               "graphDetail": {
                 "viewId": "graphDetail",
                 "viewName": "GraphDetail"
+              },
+              "graphEcharts": {
+                "viewId": "graphEcharts",
+                "viewName": "GraphEcharts"
               }
             }
         }

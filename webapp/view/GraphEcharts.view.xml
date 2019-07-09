@@ -1,0 +1,35 @@
+<mvc:View xmlns:html="http://www.w3.org/1999/xhtml" 
+xmlns="sap.m" 
+xmlns:l="sap.ui.layout"
+xmlns:mvc="sap.ui.core.mvc" 
+xmlns:core="sap.ui.core" 
+controllerName="simple-app.controller.GraphEcharts">
+	<App>
+		<pages>
+			<Page title="{i18n>GraphEchartsPageTitle}" enableScrolling="true" showNavButton="true" navButtonPress="onNavBack">
+				<content>
+                    <VBox class="sapUiMediumMarginTop sapUiMediumMarginBegin">
+				        
+                    </VBox>
+
+                    <VBox id="echartsContainer" 
+                        justifyContent="Center" alignItems="Center">
+                        <!--divs elements generated dinamically in controller -->
+                    </VBox>
+
+                    <Title text="VBox Container" class="sapUiMediumMarginTop sapUiMediumMarginBegin"/>
+                    <VBox id="echartsContainerVBoxExample" 
+                        justifyContent="Center" alignItems="Center">
+                        
+                    </VBox>
+
+                    <Title text="Grid Container" class="sapUiMediumMarginTop sapUiMediumMarginBegin"/>
+                    <l:Grid id="echartsContainerGridExample"
+                        defaultSpan="XL2 L4">
+                        </l:Grid>
+                    
+				</content>
+			</Page>
+		</pages>
+	</App>
+</mvc:View>

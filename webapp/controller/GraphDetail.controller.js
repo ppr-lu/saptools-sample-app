@@ -14,7 +14,7 @@ sap.ui.define([
 ], function(Controller, JSONModel, MessageBox, History, VizFrame, FeedItem, ChartFormatter, FlattenedDataset, Filter, FilterOperator, Util, Formatter) {
 	"use strict";
 
-	return Controller.extend("simple-app.controller.GraphMaster", {
+	return Controller.extend("simple-app.controller.GraphDetail", {
 
         formatter: Formatter,
 
