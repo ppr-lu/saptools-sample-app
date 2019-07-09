@@ -8,136 +8,125 @@ controllerName="simple-app.controller.GraphDetail">
 		<pages>
 			<Page title="{i18n>GraphDetailPageTitle}" enableScrolling="true" showNavButton="true" navButtonPress="onNavBack">
 				<content>
-                    <VBox>
+                    <!-- <VBox>
 				        <Text text="Simple app" />
                         <Button text="SOAP" press="onRetrieveGraphData"/>
+                    </VBox> -->
+                    <VBox class="sapUiMediumMarginTop sapUiMediumMarginBegin">
+                        <Title text="Filtro" class="sapUiTinyMarginBottom"/>
+                        <HBox>
+                            <VBox class="sapUiSmallMarginEnd">
+                                <Label text="Fecha Desde"/>
+                                <!-- <DatePicker
+                                    value="{modsliderrange>/fechadesde}"
+                                    valueFormat="yyyy-MM-dd"
+                                    displayFormat="dd/MM/yyyy"
+                                    change="onFilterDateChange"
+                                /> -->
+                                <DateTimePicker
+                                value="{modsliderrange>/fechadesde}" 
+                                displayFormat="HH:mm dd/MM/yyyy"/>
+                            </VBox>
+                            <VBox class="sapUiSmallMarginEnd">
+                                <Label text="Fecha Hasta"/>
+                                <!-- <DatePicker
+                                    value="{modsliderrange>/fechahasta}"
+                                    valueFormat="yyyy-MM-dd"
+                                    displayFormat="dd/MM/yyyy"
+                                    change="onFilterDateChange"
+                                /> -->
+                                <DateTimePicker
+                                value="{modsliderrange>/fechahasta}" 
+                                displayFormat="HH:mm dd/MM/yyyy"/>
+                            </VBox>   
+                        </HBox>
+                        <HBox>
+                            <Button text="Aplicar" press="onApplySliderRange" class="sapUiSmallMarginEnd"/>
+                            <Button text="Limpiar" press="onResetSliderRange" class="sapUiSmallMarginEnd"/>
+                        </HBox>
                     </VBox>
 
+                    <VBox height="100%" class="VBoxHeight" id="chartBox">
 
-
-
-                    <chart:ChartContainer  showFullScreen="true" showZoom="false" title="Ice-Cream-Report">
-                        <chart:ChartContainerContent>
-                            <chart:content>
-                                <viz:VizFrame  id="vizFrame1" width="auto"
-                                    uiConfig="{applicationSet:'fiori'}" vizType="timeseries_line"
-                                    vizProperties="{
-                                        plotArea:{
-                                            dataLabel: {
-                                                visible: false
-                                            }
-                                        }
-                                    }"
-                                    selectData="myOnClickHandler" 
-                                    noDataText="No Data"
-                                    renderComplete="handleRenderComplete"
-                                >
-                                    <viz:dataset>
-                                    <viz.data:FlattenedDataset  data="{moddetailgraph>/TITULOS/TITULO/VARIABLES/VARIABLE/PUNTOS/puntos/}">
-                                        <viz.data:dimensions>
-                                            <viz.data:DimensionDefinition name="Date" value="{moddetailgraph>FECHA_TAG}" dataType="date"/>
-                                        </viz.data:dimensions>
-                                        <viz.data:measures>
-                                            <viz.data:MeasureDefinition name="Data" value="{moddetailgraph>VALOR}" />
-                                        </viz.data:measures>
-                                    </viz.data:FlattenedDataset>
-                                    </viz:dataset>
+                    <chart:ChartContainer showFullScreen="true" showZoom="true">
+                    <chart:ChartContainerContent>
+                    <chart:content>
+                        <viz:VizFrame  id="idVizFrame" width="auto"
+                            uiConfig="{applicationSet:'fiori'}" vizType="dual_line"
+                            vizProperties="{
+                                title: '{moddetailgraph>/TITULOS/TITULO/TEXTO}',
+                                plotArea: {
+                                    window: {
+                                        start: 'firstDataPoint',
+                                        end: 'lastDataPoint'
+                                    },
+                                    dataLabel: {
+                                        visible: false
+                                    },
+                                    secondaryScale: {
                                         
-                                    <viz:feeds>
-                                        <viz.feeds:FeedItem uid="valueAxis" type="Measure" values="Data" />
-                                        <viz.feeds:FeedItem uid="timeAxis" type="Dimension" values="Date" />
-                                    </viz:feeds>
-                                </viz:VizFrame>
-
-                                <viz:VizSlider id="idVizSlider" uiConfig="{applicationSet:'fiori'}"
-                                    height='100%' width="100%" vizType='timeseries_column'>
-                                    <viz:dataset>
-                                    <viz.data:FlattenedDataset  data="{moddetailgraph>/TITULOS/TITULO/VARIABLES/VARIABLE/PUNTOS/puntos/}">
-                                        <viz.data:dimensions>
-                                            <viz.data:DimensionDefinition name="Date" value="{moddetailgraph>FECHA_TAG}" dataType="date"/>
-                                        </viz.data:dimensions>
-                                        <viz.data:measures>
-                                            <viz.data:MeasureDefinition name="Data" value="{moddetailgraph>VALOR}" />
-                                        </viz.data:measures>
-                                    </viz.data:FlattenedDataset>
-                                    </viz:dataset>
-
-                                     <viz:feeds>
-                                        <viz.feeds:FeedItem uid="valueAxis" type="Measure" values="Data" />
-                                        <viz.feeds:FeedItem uid="timeAxis" type="Dimension" values="Date" />
-                                    </viz:feeds>
-                                </viz:VizSlider>
-
-                            </chart:content>
-                        </chart:ChartContainerContent>
+                                    }
+                                },
+                                timeAxis:{
+                                    title: {visible: false}
+                                },    
+                                valueAxis: {
+                                    title: {
+                                        visible: true
+                                    }
+                                }
+                            }"
+                            renderComplete="_onGraphRenderComplete"
+                            >
+                            <viz:dataset>
+                            <viz.data:FlattenedDataset  data="{moddetailgraph>/TITULOS/TITULO/VARIABLES/VARIABLE/PUNTOS/puntos/}">
+                                <viz.data:dimensions>
+                                    <viz.data:DimensionDefinition name="Date" value="{moddetailgraph>FECHA_TAG}" dataType="date"/>
+                                </viz.data:dimensions>
+                                <viz.data:measures>
+                                    <viz.data:MeasureDefinition name="Data" value="{moddetailgraph>VALOR}" />
+                                    <viz.data:MeasureDefinition name="Data2" value="{moddetailgraph>VALOR2}" />
+                                </viz.data:measures>
+                            </viz.data:FlattenedDataset>
+                            </viz:dataset>
+                                
+                            <viz:feeds>
+                                <viz.feeds:FeedItem uid="valueAxis" type="Measure" values="Data" />
+                                <viz.feeds:FeedItem uid="valueAxis2" type="Measure" values="Data2" />
+                                <viz.feeds:FeedItem uid="timeAxis" type="Dimension" values="Date" />
+                                <viz.feeds:FeedItem uid="categoryAxis" type="Dimension" values="Date" />
+                            </viz:feeds>
+                        </viz:VizFrame>
+                    </chart:content>
+                    </chart:ChartContainerContent>
                     </chart:ChartContainer>
+                    
 
 
 
 
+                        <viz:VizSlider id="idVizSlider" uiConfig="{applicationSet:'fiori'}"
+                            height='100%' width="100%" vizType='timeseries_line'>
+                            <viz:dataset>
+                            <viz.data:FlattenedDataset  data="{moddetailgraph>/TITULOS/TITULO/VARIABLES/VARIABLE/PUNTOS/puntos/}">
+                                <viz.data:dimensions>
+                                    <viz.data:DimensionDefinition name="Date" value="{moddetailgraph>FECHA_TAG}" dataType="date"/>
+                                </viz.data:dimensions>
+                                <viz.data:measures>
+                                    <viz.data:MeasureDefinition name="Data" value="{moddetailgraph>VALOR}" />
+                                    <viz.data:MeasureDefinition name="Data2" value="{moddetailgraph>VALOR2}" />
+                                </viz.data:measures>
+                            </viz.data:FlattenedDataset>
+                            </viz:dataset>
 
+                            <viz:feeds>
+                                <viz.feeds:FeedItem uid="valueAxis" type="Measure" values="Data" />
+                                <!-- <viz.feeds:FeedItem uid="valueAxis" type="Measure" values="Data2" /> -->
+                                <viz.feeds:FeedItem uid="timeAxis" type="Dimension" values="Date" />
+                            </viz:feeds>
+                        </viz:VizSlider>
 
-
-
-
-                    <!-- <layout:FixFlex id='chartFixFlex2' minFlexSize="250">
-                        <layout:fixContent>
-                            <Panel id='settingsPanel2' class="panelStyle" expandable="true" expanded="true" headerText="Settings" width="auto">
-                                <content>
-                                    <HBox class='settingsHBox'>
-                                    <VBox width="200px">
-                                        <Label text = 'Grafica Prueba' design="Bold" class='settingsLabel'></Label>
-                                        <Select id='chartTypeSelect' class='settingsSelect' selectedKey='{/chartType/defaultSelected}' maxWidth="150px" change='onChartTypeChanged' 
-                                            items="{path: '/chartType/values'}">
-                                            <items>
-                                                <core:Item text="{name}" key="{key}" />
-                                            </items>
-                                        </Select>
-                                    </VBox>
-                                    </HBox>
-                                </content>
-                            </Panel>
-                        </layout:fixContent>
-                        <layout:flexContent>
-                            <viz:Popover ></viz:Popover>
-                            <viz:VizFrame id="vizFrame2"  uiConfig="{applicationSet:'fiori'}"
-                                height='100%' width="100%" vizType='timeseries_line'
-                                vizProperties="{
-                                        plotArea:{
-                                                    dataLabel:{visible: true}
-                                        },
-                                        valueAxis: {
-                                            label: {
-                                                formatString: '.formatPattern.SHORTFLOAT'
-                                            }
-                                        },
-                                        title : {text:'Flavor-Sales'}
-                                    }">
-                                <viz:dataset>
-                                    <viz.data:FlattenedDataset data="{modmastergraph>/TITULOS/TITULO/VARIABLES/VARIABLE/PUNTOS/puntos/}">
-                                        <viz.data:dimensions>
-                                            <viz.data:DimensionDefinition name="Date"
-                                                value="{FECHA_TAG}" dataType="date"/>
-                                        </viz.data:dimensions>
-                                        <viz.data:measures>
-                                            <viz.data:MeasureDefinition name="Revenue"
-                                                value="{VALOR}" />
-                                        </viz.data:measures>
-                                    </viz.data:FlattenedDataset>
-                                </viz:dataset>
-
-                                <viz:feeds>
-                                    <viz.feeds:FeedItem uid="valueAxis" type="Measure"
-                                        values="Revenue" />
-                                    <viz.feeds:FeedItem uid="timeAxis" type="Dimension"
-                                        values="Date" />
-                                </viz:feeds>
-                            </viz:VizFrame>
-                        </layout:flexContent>
-                    </layout:FixFlex> -->
-
-
-                    <!-- <Title text="Ordenes Mezcla" level="H2"/> -->
+                    </VBox>
 				</content>
 			</Page>
 		</pages>
